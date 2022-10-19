@@ -1,0 +1,7 @@
+{
+  "name": "CarWashTime",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
