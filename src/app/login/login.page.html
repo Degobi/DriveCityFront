@@ -1,0 +1,63 @@
+
+<div class="header">
+
+  <div style="align-items: center;">
+    <img style="
+    margin-top: 15px;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 8px solid #ffffff;" src="assets/images/logo.png" alt="">
+  </div>
+
+  <div style="margin-top: -140px;" class="inner-header flex">
+    <svg version="1.1" class="logo" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500" xml:space="preserve"></svg>
+  </div>
+
+  <form [formGroup]="login">
+    <div 
+    style="margin-top: -210px;
+    padding-left: 30px;
+    padding-right: 30px;">
+
+      <ion-item>
+        <ion-input formControlName="email" type="text" placeholder="Email"></ion-input>
+      </ion-item>
+      <ion-item style="margin-top: 15px;">
+        <ion-input formControlName="password" type="password" placeholder="Senha"></ion-input>
+      </ion-item>
+
+    </div>
+    <div 
+    style="margin-top: 15%;
+    padding-left: 30px;
+    padding-right: 30px;">
+      <ion-button (click)="SendLogin(login)" expand="block" shape="round">Login</ion-button>
+      <ion-button routerLink="/signup">Registrar-se</ion-button>
+    </div>
+  </form>
+
+  <!--Waves Container-->
+  <div>
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+      </g>
+    </svg>
+  </div>
+  <!--Waves end-->
+
+</div>
+
+<div class="content flex">
+  <p>© Copyright | CarWashTime</p>
+</div>
+<!--Content ends-->
