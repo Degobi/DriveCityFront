@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { ApiService } from '../../app/services/api.service';
+import { Router } from '@angular/router';
+import { LoginPage } from '../login/login.page';
 
 @Component({
   selector: 'app-signup',
@@ -12,8 +16,13 @@ export class SignupPage implements OnInit {
   private register: FormGroup;
 
   constructor(
-    private _router: Router,
-    private formBuilder: FormBuilder) { 
+    private platform: Platform,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private loadingController: LoadingController,
+    private alertController: AlertController,
+    private apiService: ApiService,
+    private loginPage: LoginPage) { 
 
       this.register = this.formBuilder.group({
         name: new FormControl('', Validators.required),
@@ -26,10 +35,28 @@ export class SignupPage implements OnInit {
   }
 
   goToBack() : void {
-    this._router.navigate(['/login']);
+    this.router.navigate(['/login']);
   }
 
-  RegisterAccount(data: any) {
-    console.log({result: data.value, status: data.status})
+  async RegisterAccount() {
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+    this.apiService.signUp(this.register.value).subscribe(
+      async _ => {
+        await loading.dismiss();
+        this.loginPage.SendLogin();
+      },
+      async (res) => {
+        await loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Falha ao criar conta!',
+          message: res.error.msg,
+          buttons: ['OK'],
+        });
+        await alert.present();
+      }
+    );
   }
+
 }

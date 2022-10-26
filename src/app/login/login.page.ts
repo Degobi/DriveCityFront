@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { ApiService } from '../../app/services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +16,11 @@ export class LoginPage implements OnInit {
 
   constructor(
     private platform: Platform,
-    private formBuilder: FormBuilder) {
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private loadingController: LoadingController,
+    private alertController: AlertController,
+    private apiService: ApiService) {
 
       this.login = this.formBuilder.group({
         email: new FormControl('', Validators.required),
@@ -29,7 +36,26 @@ export class LoginPage implements OnInit {
     })
   }
 
-  SendLogin(login: any) {
-    console.log({result: login.value, status: login.status});
+  async SendLogin() {
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+    this.apiService.login(this.login.value).subscribe(
+      async _ => {
+        await loading.dismiss();
+        this.router.navigateByUrl('/home', { replaceUrl: true })
+      },
+      async (res) => {
+        await loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Falha ao logar',
+          message: res.error.msg,
+          buttons: ['OK']
+        });
+
+        await alert.present();
+      }
+    )
   }
+
 }
