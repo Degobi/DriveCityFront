@@ -22,31 +22,16 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    if (this.isInBlockedList(request.url)) {
-      return next.handle(request);
-    } else {
-        return next.handle(this.addToken(request)).pipe()
-    }
-  }
+    const token = this.apiService.getToken()
 
-  private isInBlockedList(url: string): Boolean {
-    if (url == `${environment.api}/auth` ||
-      url == `${environment.api}/auth/logout`) {
-      return true;
-    } else {
-      return false;
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      })
     }
-  }
 
-  private addToken(req: HttpRequest<any>) {
-    if (this.apiService.currentAccessToken) {
-      return req.clone({
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${this.apiService.currentAccessToken}`
-        })
-      });
-    } else {
-      return req;
-    }
+    return next.handle(request);
   }
 }
