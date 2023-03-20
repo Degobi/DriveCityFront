@@ -34,20 +34,20 @@ export class ApiService {
     }
   }
 
-  getSecretData() {
-    return this.http.get(`${this.url}/users/secret`);
+  getToken() {
+    return this.http.get(`${this.url}/usuario/token`);
   }
 
-  signUp(credentials: {username: any, password: any}): Observable<any> {
-    return this.http.post(`${this.url}/users`, credentials);
+  signUp(credentials: {Email: string, Senha: string}): Observable<any> {
+    return this.http.post(`${this.url}/usuario`, credentials);
   }
 
-  login(credentials: {username: any, password: any}): Observable<any> {
-    return this.http.post(`${this.url}/login`, credentials).pipe(
+  login(credentials: {Email: string, Senha: string}): Observable<any> {
+    return this.http.post(`${this.url}/usuario/token`, credentials).pipe(
       switchMap((tokens: {accessToken, refreshToken }) => {
         this.currentAccessToken = tokens.accessToken;
         const storeAccess = this.storage.set(ACCESS_TOKEN_KEY, tokens.accessToken);
-        const storeRefresh = this.storage.set( REFRESH_TOKEN_KEY, tokens.refreshToken);
+        const storeRefresh = this.storage.set(REFRESH_TOKEN_KEY, tokens.refreshToken);
         return from(Promise.all([storeAccess, storeRefresh]));
       }),
       tap(_ => {

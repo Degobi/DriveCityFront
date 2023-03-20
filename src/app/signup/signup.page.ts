@@ -25,9 +25,8 @@ export class SignupPage implements OnInit {
     private loginPage: LoginPage) { 
 
       this.register = this.formBuilder.group({
-        name: new FormControl('', Validators.required),
-        email: new FormControl('', Validators.required),
-        password: new FormControl('', Validators.required)
+        Email: new FormControl('', Validators.required),
+        Senha: new FormControl('', Validators.required)
       })
     }
 
@@ -45,7 +44,22 @@ export class SignupPage implements OnInit {
     this.apiService.signUp(this.register.value).subscribe(
       async _ => {
         await loading.dismiss();
-        this.loginPage.SendLogin();
+        this.apiService.login(this.register.value).subscribe(
+          async _ => {
+            await loading.dismiss();
+            this.router.navigateByUrl('/home', { replaceUrl: true })
+          },
+          async (res) => {
+            await loading.dismiss();
+            const alert = await this.alertController.create({
+              header: 'Não foi possível efetuar o login',
+              message: res.error.msg,
+              buttons: ['OK']
+            });
+    
+            await alert.present();
+          }
+        );
       },
       async (res) => {
         await loading.dismiss();

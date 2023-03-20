@@ -23,8 +23,8 @@ export class LoginPage implements OnInit {
     private apiService: ApiService) {
 
       this.login = this.formBuilder.group({
-        email: new FormControl('', Validators.required),
-        password: new FormControl('', Validators.required)
+        Email: new FormControl('', Validators.required),
+        Senha: new FormControl('', Validators.required)
       })
   }
 
