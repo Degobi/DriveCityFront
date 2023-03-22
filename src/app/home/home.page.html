@@ -1,29 +1,11 @@
 <ion-app>
-  <ion-menu contentId="main-content">
-    <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu Content</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item (click)="teste()">
-          <ion-avatar slot="start">
-            <img alt="Silhouette of a person's head" src="../../assets/images/profile.jpg" />
-          </ion-avatar>
-          <ion-label>Thiago Degobi</ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-
   <div class="ion-page" id="main-content">
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title style="text-align: center;">Car Wash Time</ion-title>
+        <ion-title style="text-align: center;">CW City</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -32,5 +14,21 @@
         <capacitor-google-map #map></capacitor-google-map>
       </div>
     </ion-content>
+
+    <ion-tab-bar slot="bottom">
+
+      <ion-tab-button tab="account">
+        <ion-icon  name="person"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="contact">
+        <ion-icon style="color: green;" name="add-circle-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="settings">
+        <ion-icon name="settings"></ion-icon>
+      </ion-tab-button>
+
+    </ion-tab-bar>
   </div>
 </ion-app>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap, Marker } from '@capacitor/google-maps';
 import { environment } from 'src/environments/environment';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -9,13 +9,17 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
-  @ViewChild('map')mapRef: ElementRef;
+export class HomePage implements OnInit {
+  @ViewChild('map') mapRef: ElementRef;
   map: GoogleMap;
   lat: number;
   lng: number;
 
   constructor(private geolocation: Geolocation) { }
+
+  ngOnInit(): void {
+
+  }
 
   ionViewDidEnter() {
     this.geolocation.getCurrentPosition().then((position) => {
@@ -25,7 +29,7 @@ export class HomePage {
     }).catch((err) => {
       console.log(err)
     })
-    
+
   }
 
   async createMap() {
@@ -38,13 +42,14 @@ export class HomePage {
           lat: this.lat,
           lng: this.lng
         },
-        zoom: 12,
+        streetViewControl: false,
+        disableDefaultUI: true,
+        zoom: 12.5,
       }
     })
 
     this.addEmpresas();
   }
-
 
   async addEmpresas() {
     //realizar o Get na api, onde o cadastro das empresas foram efetuadas e retornar no mapa
@@ -52,19 +57,19 @@ export class HomePage {
     const empresas: Marker[] = [
       {
         coordinate: {
-          lat: -17.53858761249304, 
+          lat: -17.53858761249304,
           lng: -39.73754033276241
         },
-        title:'Top Lava Rápido',
-        snippet:'Lava Jato alto padrão'
+        title: 'Top Lava Rápido',
+        snippet: 'Lava Jato alto padrão'
       },
       {
         coordinate: {
-          lat: -17.544628670343858, 
+          lat: -17.544628670343858,
           lng: -39.73889541396544
         },
-        title:'Top Lava Rápido',
-        snippet:'Lava Jato alto padrão'
+        title: 'Top Lava Rápido',
+        snippet: 'Lava Jato alto padrão'
       }
     ]
 
