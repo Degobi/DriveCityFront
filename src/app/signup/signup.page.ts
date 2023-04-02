@@ -13,7 +13,7 @@ import { LoginPage } from '../login/login.page';
 })
 export class SignupPage implements OnInit {
 
-  private register: FormGroup;
+  public register: FormGroup;
 
   constructor(
     private platform: Platform,
@@ -25,6 +25,7 @@ export class SignupPage implements OnInit {
     private loginPage: LoginPage) { 
 
       this.register = this.formBuilder.group({
+        Nome: new FormControl('', Validators.minLength(1)),
         Email: new FormControl('', Validators.required),
         Senha: new FormControl('', Validators.required)
       })
@@ -40,6 +41,54 @@ export class SignupPage implements OnInit {
   async RegisterAccount() {
     const loading = await this.loadingController.create();
     await loading.present();
+
+    if (!this.register.value.Email.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Email) precisa ser preenchido!',
+        message: '',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
+
+    if (!this.register.value.Senha.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Senha) precisa ser preenchido!',
+        message: '',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
+
+    if (!this.register.value.Nome.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Nome) precisa ser preenchido!',
+        message: '',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
+
+    if (this.register.status == 'INVALID') {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campos Inválidos',
+        message: 'Preencha todos os campos!',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
 
     this.apiService.signUp(this.register.value).subscribe(
       async _ => {

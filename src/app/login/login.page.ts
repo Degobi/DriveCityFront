@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class LoginPage implements OnInit {
-  private login: FormGroup;
+  public login: FormGroup;
 
   constructor(
     private platform: Platform,
@@ -39,6 +39,30 @@ export class LoginPage implements OnInit {
   async SendLogin() {
     const loading = await this.loadingController.create();
     await loading.present();
+
+    if (!this.login.value.Senha.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Senha) precisa ser informado!',
+        message: '',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
+
+    if (!this.login.value.Email.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Emails) precisa ser informado!',
+        message: '',
+        buttons: ['OK']
+      });
+
+      await alert.present();
+      return;
+    }
 
     this.apiService.login(this.login.value).subscribe(
       async _ => {

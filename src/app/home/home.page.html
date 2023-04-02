@@ -11,14 +11,27 @@
 
     <ion-content>
       <div class="container">
-        <capacitor-google-map #map></capacitor-google-map>
+        <capacitor-google-map id="map" #map></capacitor-google-map>
       </div>
+
+      <!-- <ion-card *ngFor="let empresa of empresas">
+        <img style="justify-content: center; align-items: center; width: 100px; height: 50px;" src="{{ empresa.imagem }}" />
+        <ion-card-header>
+          <ion-card-title>{{ empresa.nome }}</ion-card-title>
+          <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          {{ empresa.descricao }}
+        </ion-card-content>
+      </ion-card> -->
+      
     </ion-content>
 
     <ion-tab-bar slot="bottom">
 
       <ion-tab-button tab="account">
-        <ion-icon  name="person"></ion-icon>
+        <ion-icon routerLink="/perfil" name="person"></ion-icon>
       </ion-tab-button>
 
       <ion-tab-button tab="contact">

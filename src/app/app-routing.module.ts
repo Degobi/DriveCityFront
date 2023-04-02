@@ -21,6 +21,17 @@ const routes: Routes = [
     path: 'signup',
     loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
   },
+  {
+    path: 'perfil',
+    loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'modal-enterprise-page',
+    loadChildren: () => import('./modal-enterprise/modal-enterprise.module').then( m => m.ModalEnterprisePageModule)
+  },
+
+
 ];
 
 @NgModule({

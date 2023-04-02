@@ -38,13 +38,13 @@ export class ApiService {
     return this.http.get(`${this.url}/usuario/token`);
   }
 
-  signUp(credentials: {Email: string, Senha: string}): Observable<any> {
+  signUp(credentials: { Nome: string, Email: string, Senha: string }): Observable<any> {
     return this.http.post(`${this.url}/usuario`, credentials);
   }
 
-  login(credentials: {Email: string, Senha: string}): Observable<any> {
+  login(credentials: { Email: string, Senha: string }): Observable<any> {
     return this.http.post(`${this.url}/usuario/token`, credentials).pipe(
-      switchMap((tokens: {accessToken, refreshToken }) => {
+      switchMap((tokens: { accessToken, refreshToken }) => {
         this.currentAccessToken = tokens.accessToken;
         const storeAccess = this.storage.set(ACCESS_TOKEN_KEY, tokens.accessToken);
         const storeRefresh = this.storage.set(REFRESH_TOKEN_KEY, tokens.refreshToken);
@@ -60,7 +60,7 @@ export class ApiService {
     return this.http.post(`${this.url}/auth/logout`, {}).pipe(
       switchMap(_ => {
         this.currentAccessToken = null;
-        const deleteAccess = this.storage.remove(ACCESS_TOKEN_KEY );
+        const deleteAccess = this.storage.remove(ACCESS_TOKEN_KEY);
         const deleteRefresh = this.storage.remove(REFRESH_TOKEN_KEY);
         return from(Promise.all([deleteAccess, deleteRefresh]));
       }),
@@ -70,4 +70,9 @@ export class ApiService {
       })
     ).subscribe();
   }
+
+  saveImage(formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}/perfil/imageupload`, formData);
+  }
+
 }
