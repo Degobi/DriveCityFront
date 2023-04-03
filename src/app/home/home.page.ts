@@ -99,6 +99,8 @@ export class HomePage implements OnInit {
         zoom: 12.5,
       }
     })
+
+
     this.map.enableAccessibilityElements(true);
     this.userLocation();
     this.addEmpresas();
@@ -128,7 +130,6 @@ export class HomePage implements OnInit {
 
     await this.map.addMarkers(empresas)
     this.map.setOnMarkerClickListener(async (marker) => { await this.openModal(marker) })
-
   }
 
   async userLocation() {
@@ -141,7 +142,7 @@ export class HomePage implements OnInit {
       iconUrl: 'https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
       title: 'Sua Localização',
     }
-
+    
     await this.map.addMarker(user)
   }
 
