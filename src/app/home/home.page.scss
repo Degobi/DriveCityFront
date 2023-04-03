@@ -54,3 +54,21 @@ ion-card-header.ios {
   display: flex;
   flex-flow: column-reverse;
 }
+
+.blinking-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  z-index: 1;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {
+      opacity: 0;
+  }
+}

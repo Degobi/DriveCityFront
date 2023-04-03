@@ -80,9 +80,10 @@ export class HomePage implements OnInit {
       },
     ]
 
+    this.userLocation();
     await this.map.addMarkers(empresas)
   }
-  
+
   async createMap() {
     this.map = await GoogleMap.create({
       id: 'my-map',
@@ -98,7 +99,8 @@ export class HomePage implements OnInit {
         zoom: 12.5,
       }
     })
-
+    this.map.enableAccessibilityElements(true);
+    this.userLocation();
     this.addEmpresas();
   }
 
@@ -121,20 +123,26 @@ export class HomePage implements OnInit {
         },
         title: 'Top Lava Rápido',
         snippet: 'Lava Jato alto padrão'
-      },
-      {
-        coordinate: {
-          lat: this.lat,
-          lng: this.lng,
-        },
-        title: 'Aqui',
-        snippet: 'Lava Jato alto padrão'
-      },
+      }
     ]
 
     await this.map.addMarkers(empresas)
     this.map.setOnMarkerClickListener(async (marker) => { await this.openModal(marker) })
 
+  }
+
+  async userLocation() {
+
+    var user: Marker = {
+      coordinate: { lat: this.lat, lng: this.lng },
+      iconAnchor: new google.maps.Point(0, 0),
+      iconSize: new google.maps.Size(0, 0),
+      iconOrigin: new google.maps.Point(0, 0),
+      iconUrl: 'https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
+      title: 'Sua Localização',
+    }
+
+    await this.map.addMarker(user)
   }
 
   calculateRoute(origin: any, destination: any) {
@@ -207,4 +215,6 @@ export class HomePage implements OnInit {
     //1 (PAGO), 2 (AGUARDANDO CONFIRMACAO LAVA-JATO), 3 (RETIRADA VEICULO), 4 (LAVANDO), 5 (A CAMINHO), 6 (FINALIZADO/ENTREGUE)
     console.log(result)
   }
+
+
 }
