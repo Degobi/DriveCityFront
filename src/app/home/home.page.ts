@@ -100,8 +100,6 @@ export class HomePage implements OnInit {
       }
     })
 
-
-    this.map.enableAccessibilityElements(true);
     this.userLocation();
     this.addEmpresas();
   }
@@ -136,10 +134,10 @@ export class HomePage implements OnInit {
 
     var user: Marker = {
       coordinate: { lat: this.lat, lng: this.lng },
-      iconAnchor: new google.maps.Point(0, 0),
-      iconSize: new google.maps.Size(0, 0),
-      iconOrigin: new google.maps.Point(0, 0),
-      iconUrl: 'https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
+      iconAnchor: { x: 50, y: 50 },
+      iconSize: { width: 50, height: 50 },
+      iconOrigin: { x: 25, y: 50 },
+      iconUrl: '',
       title: 'Sua Localização',
     }
     

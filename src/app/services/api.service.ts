@@ -5,37 +5,35 @@ import { tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
+import { map } from 'rxjs/operators';
 
 
 const ACCESS_TOKEN_KEY = 'my-access-token';
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
+interface User {
+  id: number;
+  email: string;
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ApiService {
+  
+  private currentUserSubject: BehaviorSubject<User>;
+  public currentUser: Observable<User>;
 
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
-  currentAccessToken = null;
   url = environment.api;
 
   constructor(private http: HttpClient, private router: Router, private storage: Storage) {
-    this.loadToken();
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  async loadToken() {
-    const token = await this.storage.get(ACCESS_TOKEN_KEY);
-    if (token && token.value) {
-      this.currentAccessToken = token.value;
-      this.isAuthenticated.next(true);
-    } else {
-      this.isAuthenticated.next(false);
-    }
-  }
-
-  getToken() {
-    return this.http.get(`${this.url}/usuario/token`);
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
   }
 
   signUp(credentials: { Nome: string, Email: string, Senha: string }): Observable<any> {
@@ -43,32 +41,24 @@ export class ApiService {
   }
 
   login(credentials: { Email: string, Senha: string }): Observable<any> {
-    return this.http.post(`${this.url}/usuario/token`, credentials).pipe(
-      switchMap((tokens: { accessToken, refreshToken }) => {
-        this.currentAccessToken = tokens.accessToken;
-        const storeAccess = this.storage.set(ACCESS_TOKEN_KEY, tokens.accessToken);
-        const storeRefresh = this.storage.set(REFRESH_TOKEN_KEY, tokens.refreshToken);
-        return from(Promise.all([storeAccess, storeRefresh]));
-      }),
-      tap(_ => {
-        this.isAuthenticated.next(true);
-      })
-    )
+
+    return this.http.post(`${this.url}/usuario/token`, credentials)
+    .pipe(map((response: { value }) => {
+
+      if (response && response.value.token) {
+        const user = {id: response.value.id, token: response.value.token, email: response.value.email};
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+        return user;
+      }
+
+      throw new Error('Senha ou Email inválida!');
+    }));
   }
 
   logout() {
-    return this.http.post(`${this.url}/auth/logout`, {}).pipe(
-      switchMap(_ => {
-        this.currentAccessToken = null;
-        const deleteAccess = this.storage.remove(ACCESS_TOKEN_KEY);
-        const deleteRefresh = this.storage.remove(REFRESH_TOKEN_KEY);
-        return from(Promise.all([deleteAccess, deleteRefresh]));
-      }),
-      tap(_ => {
-        this.isAuthenticated.next(false);
-        this.router.navigateByUrl('/', { replaceUrl: true });
-      })
-    ).subscribe();
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
   }
 
   saveImage(formData: FormData): Observable<any> {
