@@ -5,6 +5,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController } from '@ionic/angular';
 import { ModalEnterprisePage } from '../modal-enterprise/modal-enterprise.page';
 import { ApiService } from '../services/api.service';
+import { Empresa } from 'src/interfaces/empresa.interface';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +17,15 @@ export class HomePage implements OnInit {
   map: any;
   lat: number;
   lng: number;
+  empresas: Array<Empresa>;
 
   constructor(
     private geolocation: Geolocation,
     private modalCtrl: ModalController,
-    private apiService: ApiService) { }
+    private apiService: ApiService) 
+    {
+      this.getEmpresas()
+    }
 
   ngOnInit(): void { }
 
@@ -51,37 +56,20 @@ export class HomePage implements OnInit {
       }
     })
 
-    //realizar o Get na api, onde o cadastro das empresas foram efetuadas e retornar no mapa
-    //exemplo abaixo
-    const empresas: Marker[] = [
-      {
+    const marcador: Marker[] = []
+    this.empresas.forEach(e => {
+      marcador.push({
         coordinate: {
-          lat: -17.53858761249304,
-          lng: -39.73754033276241
+          lat: Number(e.lat),
+          lng: Number(e.lng)
         },
-        title: 'Top Lava Rápido',
-        snippet: 'Lava Jato alto padrão'
-      },
-      {
-        coordinate: {
-          lat: -17.544628670343858,
-          lng: -39.73889541396544
-        },
-        title: 'Top Lava Rápido',
-        snippet: 'Lava Jato alto padrão'
-      },
-      {
-        coordinate: {
-          lat: this.lat,
-          lng: this.lng,
-        },
-        title: 'Aqui',
-        snippet: 'Lava Jato alto padrão'
-      },
-    ]
+        title: e.nome,
+        snippet: e.descricao,
+      })
+    });
 
     this.userLocation();
-    await this.map.addMarkers(empresas)
+    await this.map.addMarkers(marcador)
   }
 
   async createMap() {
@@ -105,28 +93,20 @@ export class HomePage implements OnInit {
   }
 
   async addEmpresas() {
-    //realizar o Get na api, onde o cadastro das empresas foram efetuadas e retornar no mapa
-    //exemplo abaixo
-    const empresas: Marker[] = [
-      {
+    const marcador: Marker[] = [];
+    
+    this.empresas.forEach(e => {
+      marcador.push({
         coordinate: {
-          lat: -17.53858761249304,
-          lng: -39.73754033276241
+          lat: Number(e.lat),
+          lng: Number(e.lng)
         },
-        title: 'Top Lava Rápido',
-        snippet: 'Lava Jato alto padrão'
-      },
-      {
-        coordinate: {
-          lat: -17.544628670343858,
-          lng: -39.73889541396544
-        },
-        title: 'Top Lava Rápido',
-        snippet: 'Lava Jato alto padrão'
-      }
-    ]
+        title: e.nome,
+        snippet: e.descricao
+      })
+    });
 
-    await this.map.addMarkers(empresas)
+    await this.map.addMarkers(marcador)
     this.map.setOnMarkerClickListener(async (marker) => { await this.openModal(marker) })
   }
 
@@ -140,7 +120,7 @@ export class HomePage implements OnInit {
       iconUrl: '',
       title: 'Sua Localização',
     }
-    
+
     await this.map.addMarker(user)
   }
 
@@ -175,7 +155,7 @@ export class HomePage implements OnInit {
 
         console.log(`Distance: ${distanceInKm} km`);
 
-        const kmPerLiter = 14;
+        const kmPerLiter = 8;
         const pricePerLiter = 6.19;
         const cost = this.calculateCost(distanceInKm, kmPerLiter, pricePerLiter);
         console.log(`Cost: R$ ${Math.round(cost)} currency `);
@@ -215,5 +195,11 @@ export class HomePage implements OnInit {
     console.log(result)
   }
 
-
+  getEmpresas() {
+    this.apiService.getEmpresa().subscribe((data) => {
+      this.empresas = []
+      this.empresas = data as Empresa[]
+      console.log('Empresas', this.empresas)
+    })
+  }
 }

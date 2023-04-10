@@ -65,4 +65,8 @@ export class ApiService {
     return this.http.post(`${this.url}/perfil/imageupload`, formData);
   }
 
+  getEmpresa() {
+    return this.http.get(`${this.url}/empresa`)
+  }
+
 }
