@@ -20,9 +20,9 @@ ion-content::part(background) {
   background-color: aliceblue;
 }
 
-.container {
+.containermap {
   width: 100%;
-  height: 40%;
+  height: 90%;
   background-color: aliceblue;
   border-radius: 10px;
 }
@@ -50,25 +50,75 @@ ion-tab-bar {
   background: var(--ion-color-light);
 }
 
-ion-card-header.ios {
+
+
+ion-slides {
   display: flex;
-  flex-flow: column-reverse;
+  justify-content: center;
 }
 
-.blinking-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: red;
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  z-index: 1;
-  animation: blink 1s infinite;
+ion-header {
+  background-color: #007bff; /* cor de fundo */
+  color: #fff; /* cor do texto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 55px; /* altura do cabeçalho */
+  position: relative;
+  z-index: 10;
 }
 
-@keyframes blink {
+ion-header ion-title {
+  font-size: 24px; /* tamanho do texto */
+  font-weight: bold; /* negrito */
+  text-transform: uppercase; /* transforma o texto em maiúsculo */
+}
+
+ion-header ion-button {
+  --color: #fff; /* cor do botão */
+  margin: 0 10px; /* margem entre os botões */
+}
+
+.container {
+  display: flex;
+  width: 100px;
+  height: 0px;
+  margin: 0 auto;
+}
+
+span {
+  display: block;
+  margin: 5px auto;
+  width: 5px;
+  height: 5px;
+}
+span.wheel {
+  border: 2px solid #329bb5;
+  border-radius: 5px;
+  width: 0;
+}
+span.arrow {
+  border-bottom: 2px solid #77c5d9;
+  border-right: 2px solid #329bb5;
+  transform: rotate(45deg);
+  animation: scrollDown 1.7s ease-in-out infinite;
+}
+          
+@keyframes scrollDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(45deg);
+  }
   50% {
-      opacity: 0;
+    opacity: 0;
+    transform: translateY(5px) rotate(45deg);
+  }
+  75% {
+    opacity: 0;
+    transform: translateY(0) rotate(45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(45deg);
   }
 }

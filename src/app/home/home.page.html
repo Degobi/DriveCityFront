@@ -3,29 +3,74 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
+          <ion-button (click)="logout()">
+            <ion-icon name="log-out-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title style="text-align: center;">CW City</ion-title>
+        <ion-buttons slot="end">
+          <ion-button>
+            <ion-icon name="notifications"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <div class="container">
+      <div class="containermap">
         <capacitor-google-map id="map" #map></capacitor-google-map>
       </div>
+    </ion-content>
 
-      <!-- <ion-card *ngFor="let empresa of empresas">
-        <img style="justify-content: center; align-items: center; width: 100px; height: 50px;" src="{{ empresa.imagem }}" />
-        <ion-card-header>
-          <ion-card-title>{{ empresa.nome }}</ion-card-title>
-          <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-        </ion-card-header>
+    <ion-content>     
 
-        <ion-card-content>
-          {{ empresa.descricao }}
-        </ion-card-content>
-      </ion-card> -->
-      
+      <ion-col size="12" size-md="6" size-lg="4" style="flex: 0 0 100%;" *ngFor="let empresa of empresas">
+        <ion-card (click)="calculateRoute(empresa)">
+
+          <img src="{{ empresa.imagem }}" />
+
+          <ion-card-header style="display: flex; justify-content: center;">
+            <ion-card-title>{{ empresa.nome }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content style="display: flex; justify-content: center;">
+            {{ empresa.descricao }}
+          </ion-card-content>
+
+          <ion-footer>
+            <ion-row>
+              <ion-col style="display: flex; justify-content: center;">
+                <button style="background: initial;">
+                  <ion-icon name="navigate-circle-outline"></ion-icon>
+                  <div>{{ distanceInKm }} Km</div>
+                </button>
+              </ion-col>
+              <ion-col style="display: flex; justify-content: center;">
+                <button style=" background: initial;">
+                  <ion-icon name="cash-outline"></ion-icon>
+                  <div>R$ {{ cost }}</div>
+                </button>
+              </ion-col>
+              <ion-col style="display: flex; justify-content: center;">
+                <button style=" background: initial;">
+                  <ion-icon name="time"></ion-icon>
+                  <div>1h</div>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-footer>
+
+        </ion-card>
+        
+        <div class="container">
+              <span class="arrow"></span>
+              <span class="arrow"></span>
+              <span class="arrow"></span>
+              <span class="arrow"></span>
+              <span class="arrow"></span>
+        </div>
+
+      </ion-col>
+
     </ion-content>
 
     <ion-tab-bar slot="bottom">

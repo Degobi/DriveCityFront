@@ -1,20 +1,11 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { map } from 'rxjs/operators';
-
-
-const ACCESS_TOKEN_KEY = 'my-access-token';
-const REFRESH_TOKEN_KEY = 'my-refresh-token';
-interface User {
-  id: number;
-  email: string;
-  token: string;
-}
+import { User } from 'src/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +37,7 @@ export class ApiService {
     .pipe(map((response: { value }) => {
 
       if (response && response.value.token) {
-        const user = {id: response.value.id, token: response.value.token, email: response.value.email};
+        const user = {id: response.value.id, token: response.value.token, email: response.value.email, nome: response.value.nome};
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         return user;
@@ -59,6 +50,7 @@ export class ApiService {
   logout() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigateByUrl('/login', { replaceUrl: true })
   }
 
   saveImage(formData: FormData): Observable<any> {

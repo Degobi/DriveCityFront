@@ -3,10 +3,10 @@ import { GoogleMap, Marker } from '@capacitor/google-maps';
 import { environment } from 'src/environments/environment';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController } from '@ionic/angular';
-import { ModalEnterprisePage } from '../modal-enterprise/modal-enterprise.page';
+import { IonSlides } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { Empresa } from 'src/interfaces/empresa.interface';
-
+import { User } from 'src/interfaces/user.interface';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -14,10 +14,13 @@ import { Empresa } from 'src/interfaces/empresa.interface';
 })
 export class HomePage implements OnInit {
   @ViewChild('map') mapRef: ElementRef;
+  @ViewChild('slides') slides: IonSlides;
   map: any;
   lat: number;
   lng: number;
   empresas: Array<Empresa>;
+  distanceInKm: number;
+  cost: number;
 
   constructor(
     private geolocation: Geolocation,
@@ -107,7 +110,6 @@ export class HomePage implements OnInit {
     });
 
     await this.map.addMarkers(marcador)
-    this.map.setOnMarkerClickListener(async (marker) => { await this.openModal(marker) })
   }
 
   async userLocation() {
@@ -124,7 +126,7 @@ export class HomePage implements OnInit {
     await this.map.addMarker(user)
   }
 
-  calculateRoute(origin: any, destination: any) {
+  calculateRoute(destination: any) {
     const directionsService = new google.maps.DirectionsService();
     const directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -141,8 +143,8 @@ export class HomePage implements OnInit {
     directionsDisplay.setMap(this.map);
 
     const directionsRequest = {
-      origin: origin,
-      destination: destination,
+      origin: {lat: this.lat, lng: this.lng},
+      destination: { lat: destination.latitude || Number(destination.lat), lng: destination.longitude || Number(destination.lng)},
       travelMode: google.maps.TravelMode.DRIVING
     };
 
@@ -151,14 +153,14 @@ export class HomePage implements OnInit {
         directionsDisplay.setDirections(result);
 
         const distanceInMeters = result.routes[0].legs[0].distance.value;
-        const distanceInKm = distanceInMeters / 1000;
+        this.distanceInKm = Math.round(distanceInMeters / 1000);
 
-        console.log(`Distance: ${distanceInKm} km`);
+        console.log(`Distance: ${this.distanceInKm} km`);
 
         const kmPerLiter = 8;
         const pricePerLiter = 6.19;
-        const cost = this.calculateCost(distanceInKm, kmPerLiter, pricePerLiter);
-        console.log(`Cost: R$ ${Math.round(cost)} currency `);
+        this.cost = Math.round(this.calculateCost(this.distanceInKm, kmPerLiter, pricePerLiter));
+        console.log(`Cost: R$ ${Math.round(this.cost)} currency `);
       }
     });
   }
@@ -169,32 +171,6 @@ export class HomePage implements OnInit {
     return cost;
   }
 
-  async openModal(marker: any) {
-    const modal = await this.modalCtrl.create({
-      component: ModalEnterprisePage,
-      componentProps: {
-        data: marker,
-      },
-      breakpoints: [0, 0.4],
-      initialBreakpoint: 0.4,
-      backdropDismiss: false,
-      showBackdrop: false
-    })
-
-    let localizacao: any = { lat: this.lat, lng: this.lng };
-    this.calculateRoute(localizacao, { lat: marker.latitude, lng: marker.longitude })
-
-    modal.present()
-    const result = await modal.onDidDismiss();
-
-    if (result.role === 'cancel')
-      await this.initialMap()
-
-    //chamar pagina de historico onde o usuario podera ver o historico onde mostrará 
-    //1 (PAGO), 2 (AGUARDANDO CONFIRMACAO LAVA-JATO), 3 (RETIRADA VEICULO), 4 (LAVANDO), 5 (A CAMINHO), 6 (FINALIZADO/ENTREGUE)
-    console.log(result)
-  }
-
   getEmpresas() {
     this.apiService.getEmpresa().subscribe((data) => {
       this.empresas = []
@@ -202,4 +178,9 @@ export class HomePage implements OnInit {
       console.log('Empresas', this.empresas)
     })
   }
+
+  logout() {
+    this.apiService.logout()
+  }
+
 }
