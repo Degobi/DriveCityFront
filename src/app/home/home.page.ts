@@ -6,7 +6,10 @@ import { ModalController } from '@ionic/angular';
 import { IonSlides } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { Empresa } from 'src/interfaces/empresa.interface';
+import { VeiculoComponent } from '../veiculo/veiculo.component';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { User } from 'src/interfaces/user.interface';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -19,6 +22,7 @@ export class HomePage implements OnInit {
   lat: number;
   lng: number;
   empresas: Array<Empresa>;
+  usuario: User
   distanceInKm: number;
   cost: number;
 
@@ -27,20 +31,38 @@ export class HomePage implements OnInit {
     private modalCtrl: ModalController,
     private apiService: ApiService) 
     {
-      this.getEmpresas()
+      const userSessionStorage = this.apiService.currentUserValue;
+      this.getUsuario(userSessionStorage)
     }
 
   ngOnInit(): void { }
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
+    await this.getEmpresas()
+
     this.geolocation.getCurrentPosition().then((position) => {
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
       this.createMap();
+      
+      if (this.usuario?.veiculo.length == 0)
+        this.exibirModal();
+
     }).catch((err) => {
       console.log(err)
     })
 
+  }
+
+  async exibirModal() {
+    const modal = await this.modalCtrl.create({
+      component: VeiculoComponent,
+      cssClass: 'meu-modal-classe',
+      keyboardClose: false,
+      backdropDismiss: false
+    });
+
+    await modal.present();
   }
 
   async initialMap() {
@@ -171,11 +193,18 @@ export class HomePage implements OnInit {
     return cost;
   }
 
-  getEmpresas() {
+  async getEmpresas() {
     this.apiService.getEmpresa().subscribe((data) => {
       this.empresas = []
       this.empresas = data as Empresa[]
       console.log('Empresas', this.empresas)
+    })
+  }
+
+  getUsuario(usuario: any) {
+    this.apiService.getUsuarioId(usuario.id).subscribe((data: {value: any}) => {
+      this.usuario = data.value as User
+      console.log('Usuario', this.usuario)
     })
   }
 

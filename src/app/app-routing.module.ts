@@ -20,12 +20,7 @@ const routes: Routes = [
   {
     path: 'signup',
     loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
-  },
-  {
-    path: 'modal-enterprise-page',
-    loadChildren: () => import('./modal-enterprise/modal-enterprise.module').then( m => m.ModalEnterprisePageModule)
-  },
-
+  }
 
 ];
 

@@ -24,7 +24,7 @@
     <ion-content>     
 
       <ion-col size="12" size-md="6" size-lg="4" style="flex: 0 0 100%;" *ngFor="let empresa of empresas">
-        <ion-card (click)="calculateRoute(empresa)">
+        <ion-card class="cardPrincipal" (click)="calculateRoute(empresa)">
 
           <img src="{{ empresa.imagem }}" />
 
@@ -38,16 +38,16 @@
 
           <ion-footer>
             <ion-row>
-              <ion-col style="display: flex; justify-content: center;">
-                <button style="background: initial;">
-                  <ion-icon name="navigate-circle-outline"></ion-icon>
-                  <div>{{ distanceInKm }} Km</div>
+              <ion-col class="navigation-col">
+                <button class="navigation-button">
+                  <ion-icon name="navigate-circle-outline" class="navigation-icon"></ion-icon>
+                  <div class="navigation-text">{{ distanceInKm }} Km</div>
                 </button>
               </ion-col>
               <ion-col style="display: flex; justify-content: center;">
                 <button style=" background: initial;">
-                  <ion-icon name="cash-outline"></ion-icon>
-                  <div>R$ {{ cost }}</div>
+                  <ion-icon style="color: green;" name="cash-outline"></ion-icon>
+                  <div>Ver preços</div>
                 </button>
               </ion-col>
               <ion-col style="display: flex; justify-content: center;">
@@ -61,12 +61,12 @@
 
         </ion-card>
         
-        <div class="container">
-              <span class="arrow"></span>
-              <span class="arrow"></span>
-              <span class="arrow"></span>
-              <span class="arrow"></span>
-              <span class="arrow"></span>
+        <div style="display: grid; justify-content: center; align-items: center;" class="containerPrincipal">
+          <div class="container">
+            <div class="chevron"></div>
+            <div class="chevron"></div>
+            <div class="chevron"></div>
+          </div>
         </div>
 
       </ion-col>

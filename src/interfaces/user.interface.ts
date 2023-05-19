@@ -3,4 +3,5 @@ export interface User {
     email: string;
     token: string;
     nome: string;
+    veiculo?: Array<any>;
 }
