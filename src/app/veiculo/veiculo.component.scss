@@ -1,4 +1,13 @@
-ion-header {
+  body {
+    background-color: lightcyan;
+    font-family: 'Lato', sans-serif;
+  }
+
+  ion-content::part(background) {
+    background-color: lightcyan;
+  }
+
+  ion-header {
     background-color: #1976d2;
     color: #fff;
   }
@@ -13,11 +22,6 @@ ion-header {
     border-bottom: 1px solid #ccc;
   }
   
-  ion-button {
-    margin-top: px;
-  }
-  
-
   .slide-content {
     margin: 8px;
     width: 250px;
@@ -27,21 +31,26 @@ ion-header {
     overflow: hidden;
     position: relative;
   }
+
   img {
     width: 100%;
   }
+
   .slid-er {
     height: 156px; /* slide-content height + 2*margin */
     margin: auto;
     overflow: hidden;
     width: 100%;
   }
+
   .slid-er .slides {
     display: flex;
   }
+
   .slid-er .slide {
     width: 258px; /* slide-content width + margin */
   }
+
   .button-container {
     position: absolute;
     top: 0;
@@ -52,12 +61,15 @@ ion-header {
     cursor: pointer;
     transition: opacity 0.25s;
   }
+
   .button-container:hover {
     opacity: 1;
   }
+
   .button-container:hover .button {
     transform: translate(-50%, -50%);
   }
+
   .button {
     position: absolute;
     top: 90%;
@@ -69,21 +81,19 @@ ion-header {
     color: white;
     outline: 2px solid transparent;
   }
+
   .button:after {
     content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
     margin: 0 3px 0 5px;
     filter: invert(1);
   }
+
   .button:hover {
     background-color: rgba(0, 0, 0, 0.9);
     box-shadow: 0 0 0 2px gray;
   }
   
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
-
-body {
-	font-family: 'Lato', sans-serif;
-}
 
 .principalplaca {
   position: absolute;
@@ -169,4 +179,33 @@ body {
 .placa_body h1 {
 	font-size: 32px;
 	margin: 0;
+}
+
+ion-item {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  border-radius: 48px;
+  height: 45px;
+  box-shadow: 0px 0.5px 3px 0px rgba(0, 0, 0, 0.83);
+  --highlight-height: 0px;
+
+  ion-input {
+      font-size: 18px;
+      --padding-top: 20px;
+      --padding-bottom: 15px;
+      --padding-start: 40px;
+  }
+
+  a {
+      font-size: 17px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+  }
+}
+
+.componente {
+  margin-left: 27%;
+  margin-top: 55px;
+  width: 50%;
 }

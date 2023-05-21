@@ -42,24 +42,13 @@ export class SignupPage implements OnInit {
     const loading = await this.loadingController.create();
     await loading.present();
 
-    if (!this.register.value.Email.trim().length) {
+    if (this.register.status == 'INVALID') {
       await loading.dismiss();
       const alert = await this.alertController.create({
-        header: 'Campo (Email) precisa ser preenchido!',
-        message: '',
-        buttons: ['OK']
-      });
-
-      await alert.present();
-      return;
-    }
-
-    if (!this.register.value.Senha.trim().length) {
-      await loading.dismiss();
-      const alert = await this.alertController.create({
-        header: 'Campo (Senha) precisa ser preenchido!',
-        message: '',
-        buttons: ['OK']
+        header: 'Campos Inválidos',
+        cssClass: 'custom-alert',
+        message: 'Preencha todos os campos!',
+        buttons: ['OK'],
       });
 
       await alert.present();
@@ -71,19 +60,34 @@ export class SignupPage implements OnInit {
       const alert = await this.alertController.create({
         header: 'Campo (Nome) precisa ser preenchido!',
         message: '',
-        buttons: ['OK']
+        buttons: ['OK'],
+        cssClass: 'custom-alert'
       });
 
       await alert.present();
       return;
     }
-
-    if (this.register.status == 'INVALID') {
+    
+    if (!this.register.value.Email.trim().length) {
       await loading.dismiss();
       const alert = await this.alertController.create({
-        header: 'Campos Inválidos',
-        message: 'Preencha todos os campos!',
-        buttons: ['OK']
+        header: 'Campo (Email) precisa ser preenchido!',
+        message: '',
+        buttons: ['OK'],
+        cssClass: 'custom-alert'
+      });
+    
+      await alert.present();
+      return;
+    }
+
+    if (!this.register.value.Senha.trim().length) {
+      await loading.dismiss();
+      const alert = await this.alertController.create({
+        header: 'Campo (Senha) precisa ser preenchido!',
+        message: '',
+        buttons: ['OK'],
+        cssClass: 'custom-alert'
       });
 
       await alert.present();

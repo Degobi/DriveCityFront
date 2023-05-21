@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-
 @Component({
   selector: 'app-veiculo',
   templateUrl: './veiculo.component.html',
   styleUrls: ['./veiculo.component.scss'],
 })
 export class VeiculoComponent implements OnInit {
-  placa: string = '';
+  placa: string;
   xOffset: number = 0;
   isTouchIn: boolean = false;
 
-  constructor() {}
+  constructor() {
+    this.placa = "Sua Placa";
+
+  }
 
   ngOnInit() {
-
     const slides: HTMLElement | null = document.getElementById("slides");
 
     setInterval(() => {
@@ -34,6 +35,10 @@ export class VeiculoComponent implements OnInit {
   }
 
   cadastrarVeiculo() {
+
+    if (!this.placa || this.placa.length <= 0) {
+      
+    }
     console.log(this.placa);
     // lógica para salvar o veículo cadastrado
   }
@@ -50,5 +55,4 @@ export class VeiculoComponent implements OnInit {
       slides.style.transform = "translateX(-" + this.xOffset + "px)";
     }
   }
-
 }
