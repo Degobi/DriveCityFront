@@ -68,4 +68,8 @@ export class ApiService {
   getUsuarioId(id: number) {
     return this.http.get(`${this.url}/usuario/${id}`)
   }
+
+  postVeiculo(modelo: any): Observable<any> {
+    return this.http.post(`${this.url}/veiculo`, modelo);
+  }
 }

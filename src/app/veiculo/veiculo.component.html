@@ -6,8 +6,12 @@
 
 <ion-content class="ion-padding">
 
-
-  
+  <ion-item>
+    <ion-label>Tipo de Veículo</ion-label>
+    <ion-select [(ngModel)]="tipoVeiculoSelecionado">
+      <ion-select-option value="{{ tipo }}" *ngFor="let tipo of tiposVeiculo">{{ tipo }}</ion-select-option>
+    </ion-select>
+  </ion-item>
 
   <ion-item class="componente">
     <ion-input [(ngModel)]="placa" placeholder="Placa" maxlength="7"></ion-input>

@@ -57,7 +57,10 @@ export class HomePage implements OnInit {
       component: VeiculoComponent,
       cssClass: 'meu-modal-classe',
       keyboardClose: false,
-      backdropDismiss: false
+      backdropDismiss: false,
+      componentProps: {
+        userId: this.usuario.id
+      }
     });
 
     await modal.present();
@@ -107,7 +110,7 @@ export class HomePage implements OnInit {
         },
         streetViewControl: false,
         disableDefaultUI: true,
-        zoom: 12.5,
+        zoom: 12.5
       }
     })
 
@@ -117,15 +120,33 @@ export class HomePage implements OnInit {
 
   async addEmpresas() {
     const marcador: Marker[] = [];
-    
+    const directionsService = new google.maps.DirectionsService();
+
     this.empresas.forEach(e => {
+
+      let directionsRequest = { 
+        origin: {lat: this.lat, lng: this.lng }, 
+        destination: {lat: Number(e.lat), lng: Number(e.lng) }, 
+        travelMode: google.maps.TravelMode.DRIVING
+      }
+
+      directionsService.route(directionsRequest, (res, stat) => {
+        e.res = res
+        let distanceInMeters = res.routes[0].legs[0].distance.value;
+        e.distancia = Math.round(distanceInMeters / 1000);
+      })
+
       marcador.push({
         coordinate: {
           lat: Number(e.lat),
           lng: Number(e.lng)
         },
         title: e.nome,
-        snippet: e.descricao
+        snippet: e.descricao,
+        iconAnchor: { x: 25, y: 50 },
+        iconSize: { width: 50, height: 50 },
+        iconOrigin: { x: 0, y: 0 },
+        iconUrl: '../assets/icon/car.png'
       })
     });
 
@@ -136,20 +157,21 @@ export class HomePage implements OnInit {
 
     var user: Marker = {
       coordinate: { lat: this.lat, lng: this.lng },
-      iconAnchor: { x: 50, y: 50 },
+      iconAnchor: { x: 25, y: 50 },
       iconSize: { width: 50, height: 50 },
-      iconOrigin: { x: 25, y: 50 },
-      iconUrl: '',
+      iconOrigin: { x: 0, y: 0 },
+      iconUrl: '../assets/icon/navigation.png',
       title: 'Sua Localização',
     }
 
     await this.map.addMarker(user)
   }
 
-  calculateRoute(destination: any) {
-    const directionsService = new google.maps.DirectionsService();
-    const directionsDisplay = new google.maps.DirectionsRenderer();
-
+  destinationOnMap(destination: any) {
+    const directionsDisplay = new google.maps.DirectionsRenderer({
+      suppressMarkers: true  // Suprime os marcadores padrão
+    });
+    
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: {
         lat: this.lat,
@@ -161,34 +183,31 @@ export class HomePage implements OnInit {
     });
 
     directionsDisplay.setMap(this.map);
+    directionsDisplay.setDirections(destination.res);
 
-    const directionsRequest = {
-      origin: {lat: this.lat, lng: this.lng},
-      destination: { lat: destination.latitude || Number(destination.lat), lng: destination.longitude || Number(destination.lng)},
-      travelMode: google.maps.TravelMode.DRIVING
-    };
-
-    directionsService.route(directionsRequest, (result, status) => {
-      if (status === 'OK') {
-        directionsDisplay.setDirections(result);
-
-        const distanceInMeters = result.routes[0].legs[0].distance.value;
-        this.distanceInKm = Math.round(distanceInMeters / 1000);
-
-        console.log(`Distance: ${this.distanceInKm} km`);
-
-        const kmPerLiter = 8;
-        const pricePerLiter = 6.19;
-        this.cost = Math.round(this.calculateCost(this.distanceInKm, kmPerLiter, pricePerLiter));
-        console.log(`Cost: R$ ${Math.round(this.cost)} currency `);
-      }
+    // Personalize o marcador do "Ponto A"
+    const startPointMarker = new google.maps.Marker({
+      position: directionsDisplay.getDirections().routes[0].legs[0].start_location,
+      icon: {
+        url: "../assets/icon/navigation.png",
+        scaledSize: new google.maps.Size(50, 50),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(25, 50)
+      },
+      map: this.map
     });
-  }
 
-  calculateCost(distance: any, kmPerLiter: any, pricePerLiter: any) {
-    const liters = distance / kmPerLiter;
-    const cost = liters * pricePerLiter;
-    return cost;
+    // Personalize o marcador do "Ponto B"
+    const endPointMarker = new google.maps.Marker({
+      position: directionsDisplay.getDirections().routes[0].legs[0].end_location,
+      icon: {
+        url: "../assets/icon/car.png",
+        scaledSize: new google.maps.Size(50, 50),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(25, 50)
+      },
+      map: this.map
+    });
   }
 
   async getEmpresas() {

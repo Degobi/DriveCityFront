@@ -24,7 +24,7 @@
     <ion-content>     
 
       <ion-col size="12" size-md="6" size-lg="4" style="flex: 0 0 100%;" *ngFor="let empresa of empresas">
-        <ion-card class="cardPrincipal" (click)="calculateRoute(empresa)">
+        <ion-card class="cardPrincipal" (click)="destinationOnMap(empresa)">
 
           <img src="{{ empresa.imagem }}" />
 
@@ -41,7 +41,7 @@
               <ion-col class="navigation-col">
                 <button class="navigation-button">
                   <ion-icon name="navigate-circle-outline" class="navigation-icon"></ion-icon>
-                  <div class="navigation-text">{{ distanceInKm }} Km</div>
+                  <div class="navigation-text">{{ empresa.distancia }} Km</div>
                 </button>
               </ion-col>
               <ion-col style="display: flex; justify-content: center;">

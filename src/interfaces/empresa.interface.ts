@@ -4,5 +4,8 @@ export interface Empresa {
     descricao: string,
     lat: string,
     lng: string,
+    distancia: number,
+    tempo: number,
+    res: any,
     tabelaPrecos: Array<any>
 }
