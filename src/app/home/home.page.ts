@@ -3,7 +3,6 @@ import { GoogleMap, Marker } from '@capacitor/google-maps';
 import { environment } from 'src/environments/environment';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController } from '@ionic/angular';
-import { IonSlides } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
@@ -17,7 +16,6 @@ import { User } from 'src/interfaces/user.interface';
 })
 export class HomePage implements OnInit {
   @ViewChild('map') mapRef: ElementRef;
-  @ViewChild('slides') slides: IonSlides;
   map: any;
   lat: number;
   lng: number;
@@ -31,14 +29,14 @@ export class HomePage implements OnInit {
     private modalCtrl: ModalController,
     private apiService: ApiService) 
     {
+      this.getEmpresas()
       const userSessionStorage = this.apiService.currentUserValue;
       this.getUsuario(userSessionStorage)
     }
 
   ngOnInit(): void { }
 
-  async ionViewDidEnter() {
-    await this.getEmpresas()
+  ionViewDidEnter() {
 
     this.geolocation.getCurrentPosition().then((position) => {
       this.lat = position.coords.latitude;
@@ -195,9 +193,9 @@ export class HomePage implements OnInit {
 
   async getEmpresas() {
     this.apiService.getEmpresa().subscribe((data) => {
-      this.empresas = []
-      this.empresas = data as Empresa[]
-      console.log('Empresas', this.empresas)
+      this.empresas = [];
+      this.empresas = data as Empresa[];
+      console.log('Empresas', this.empresas);
     })
   }
 
