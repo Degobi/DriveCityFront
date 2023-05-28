@@ -15,6 +15,7 @@ enum TipoVeiculo {
   templateUrl: './veiculo.component.html',
   styleUrls: ['./veiculo.component.scss'],
 })
+
 export class VeiculoComponent implements OnInit {
   placa: string;
   tipoVeiculoSelecionado: TipoVeiculo;

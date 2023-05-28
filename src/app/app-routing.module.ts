@@ -23,7 +23,13 @@ const routes: Routes = [
   },
   {
     path: 'veiculo',
-    loadChildren: () => import('./veiculo/veiculo.component.module').then(m => m.VeiculoComponentModule)
+    loadChildren: () => import('./veiculo/veiculo.component.module').then(m => m.VeiculoComponentModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'checkout',
+    loadChildren: () => import('./checkout-modal/checkout-modal.component.module').then(m => m.CheckoutModalComponentModule),
+    canActivate: [AuthGuard]
   }
 
 ];

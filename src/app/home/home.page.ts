@@ -8,7 +8,7 @@ import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { User } from 'src/interfaces/user.interface';
-
+import { CheckoutModalComponent } from '../checkout-modal/checkout-modal.component';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -167,11 +167,11 @@ export class HomePage implements OnInit {
     await this.map.addMarker(user)
   }
 
-  destinationOnMap(destination: any) {
+  destinationOnMap(empresa: any) {
     const directionsDisplay = new google.maps.DirectionsRenderer({
       suppressMarkers: true  // Suprime os marcadores padrão
     });
-    
+
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: {
         lat: this.lat,
@@ -183,7 +183,7 @@ export class HomePage implements OnInit {
     });
 
     directionsDisplay.setMap(this.map);
-    directionsDisplay.setDirections(destination.res);
+    directionsDisplay.setDirections(empresa.res);
 
     // Personalize o marcador do "Ponto A"
     const startPointMarker = new google.maps.Marker({
@@ -208,6 +208,10 @@ export class HomePage implements OnInit {
       },
       map: this.map
     });
+
+    //Modal para checkout e pagamento
+    this.openCheckoutModal(empresa);
+
   }
 
   async getEmpresas() {
@@ -227,6 +231,23 @@ export class HomePage implements OnInit {
 
   logout() {
     this.apiService.logout()
+  }
+
+  async openCheckoutModal(empresa: any) {
+    const modal = await this.modalCtrl.create({
+      component: CheckoutModalComponent,
+      cssClass: 'custom-modal',
+      keyboardClose: false,
+      componentProps: {
+        empresa: empresa
+      },
+      breakpoints: [0, 0.6],
+      initialBreakpoint: 0.6,
+      backdropDismiss: false,
+      showBackdrop: false
+    });
+  
+    await modal.present();
   }
 
 }
