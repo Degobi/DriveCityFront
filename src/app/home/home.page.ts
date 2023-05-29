@@ -6,7 +6,6 @@ import { ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
-import { LocalNotifications } from '@capacitor/local-notifications';
 import { User } from 'src/interfaces/user.interface';
 import { CheckoutModalComponent } from '../checkout-modal/checkout-modal.component';
 @Component({
