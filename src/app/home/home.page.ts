@@ -7,7 +7,7 @@ import { ApiService } from '../services/api.service';
 import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
 import { User } from 'src/interfaces/user.interface';
-import { CheckoutModalComponent } from '../checkout-modal/checkout-modal.component';
+import { TabelaPrecoModalComponent } from '../tabela-preco/tabela-preco-modal.component';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -234,7 +234,7 @@ export class HomePage implements OnInit {
 
   async openCheckoutModal(empresa: any) {
     const modal = await this.modalCtrl.create({
-      component: CheckoutModalComponent,
+      component: TabelaPrecoModalComponent,
       cssClass: 'custom-modal',
       keyboardClose: false,
       componentProps: {
@@ -244,6 +244,11 @@ export class HomePage implements OnInit {
       initialBreakpoint: 0.6,
       backdropDismiss: false,
       showBackdrop: false
+    });
+
+    modal.onDidDismiss().then((result) => {
+      this.createMap()
+      console.log("RESPOSTA MODAL",result)
     });
   
     await modal.present();

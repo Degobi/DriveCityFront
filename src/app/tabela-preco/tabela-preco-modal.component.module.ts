@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { CheckoutModalComponent } from './checkout-modal.component';
+import { TabelaPrecoModalComponent } from './tabela-preco-modal.component';
 
 @NgModule({
   declarations: [
-    CheckoutModalComponent
+    TabelaPrecoModalComponent
   ],
   imports: [
     CommonModule,
@@ -15,7 +15,7 @@ import { CheckoutModalComponent } from './checkout-modal.component';
     IonicModule
   ],
   exports: [
-    CheckoutModalComponent
+    TabelaPrecoModalComponent
   ]
 })
-export class CheckoutModalComponentModule { }
+export class TabelaPrecoModalComponentModule { }

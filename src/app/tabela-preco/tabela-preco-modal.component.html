@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()" class="close-button">
+        <ion-icon name="close" class="close-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="header-title">Tabela de Preços</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="content">
+  <ion-list class="price-list">
+    <ng-container *ngFor="let tabela of tabelaPrecos">
+      <ion-item lines="none" class="price-item">
+        <ion-label class="price-label">{{ tabela.descricaoServico }} 1</ion-label>
+        <ion-checkbox slot="end" (ionChange)="selecionarServico($index)"></ion-checkbox>
+        <ion-label class="price-value">R$ {{ tabela.valorServico }}</ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <div class="payment-button" *ngIf="servicoSelecionado">
+    <ion-button expand="full" color="primary" (click)="realizarPagamento()" class="button-payment">
+      Pagar
+    </ion-button>
+  </div>
+</ion-content>

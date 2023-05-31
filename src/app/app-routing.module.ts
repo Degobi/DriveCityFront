@@ -27,8 +27,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'checkout',
-    loadChildren: () => import('./checkout-modal/checkout-modal.component.module').then(m => m.CheckoutModalComponentModule),
+    path: 'tabela-preco',
+    loadChildren: () => import('./tabela-preco/tabela-preco-modal.component.module').then(m => m.TabelaPrecoModalComponentModule),
     canActivate: [AuthGuard]
   }
 
