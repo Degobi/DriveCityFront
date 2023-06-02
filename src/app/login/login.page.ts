@@ -42,42 +42,27 @@ export class LoginPage implements OnInit {
 
     if (!this.login.value.Senha.trim().length) {
       await loading.dismiss();
-      const alert = await this.alertController.create({
-        header: 'Campo (Senha) precisa ser informado!',
-        message: '',
-        buttons: ['OK']
-      });
-
-      await alert.present();
+      await this.apiService.exibirToast('Informe a Senha', 'warning');
       return;
     }
 
     if (!this.login.value.Email.trim().length) {
       await loading.dismiss();
-      const alert = await this.alertController.create({
-        header: 'Campo (Emails) precisa ser informado!',
-        message: '',
-        buttons: ['OK']
-      });
-
-      await alert.present();
+      await this.apiService.exibirToast('Informe o Email', 'warning');
       return;
     }
 
     this.apiService.login(this.login.value).subscribe(
       async _ => {
         await loading.dismiss();
+        await this.apiService.exibirToast('Login efetuado', 'success');
+
         this.router.navigateByUrl('/home', { replaceUrl: true })
       },
       async (res) => {
         await loading.dismiss();
-        const alert = await this.alertController.create({
-          header: 'Falha ao logar',
-          message: res.error.msg,
-          buttons: ['OK']
-        });
+        await this.apiService.exibirToast('Erro ao efetuar login', 'warning');
 
-        await alert.present();
       }
     )
   }

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { map } from 'rxjs/operators';
 import { User } from 'src/interfaces/user.interface';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class ApiService {
 
   url = environment.api;
 
-  constructor(private http: HttpClient, private router: Router, private storage: Storage) {
+  constructor(private http: HttpClient, private router: Router, private storage: Storage, private toastController: ToastController,) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -72,4 +73,16 @@ export class ApiService {
   postVeiculo(modelo: any): Observable<any> {
     return this.http.post(`${this.url}/veiculo`, modelo);
   }
+
+  async exibirToast(mensagem: string, estilo) {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 3000,
+      position: 'bottom',
+      color: estilo
+    });
+  
+    toast.present();
+  }
+
 }
