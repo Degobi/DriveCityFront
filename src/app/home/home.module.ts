@@ -6,6 +6,7 @@ import { HomePage } from './home.page';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HomePageRoutingModule } from './home-routing.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
     IonicModule,
     HomePageRoutingModule,
   ],
-  providers: [Geolocation],
+  providers: [Geolocation, InAppBrowser],
   declarations: [HomePage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

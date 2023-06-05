@@ -55,7 +55,7 @@ export class LoginPage implements OnInit {
     this.apiService.login(this.login.value).subscribe(
       async _ => {
         await loading.dismiss();
-        await this.apiService.exibirToast('Login efetuado', 'success');
+        await this.apiService.exibirToast('Boas Vindas!', 'success');
 
         this.router.navigateByUrl('/home', { replaceUrl: true })
       },

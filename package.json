@@ -30,6 +30,7 @@
     "@capacitor/status-bar": "4.0.1",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/geolocation": "^5.36.0",
+    "@ionic-native/in-app-browser": "^5.36.0",
     "@ionic/angular": "^7.0.8",
     "@ionic/angular-server": "^7.0.8",
     "@ionic/storage": "^3.0.6",

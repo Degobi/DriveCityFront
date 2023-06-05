@@ -12,16 +12,16 @@
 
 <ion-content class="content">
   <ion-list class="price-list">
-    <ng-container *ngFor="let tabela of tabelaPrecos">
+    <ng-container *ngFor="let tabela of tabelaPrecos; let i = index">
       <ion-item lines="none" class="price-item">
-        <ion-label class="price-label">{{ tabela.descricaoServico }} 1</ion-label>
-        <ion-checkbox slot="end" (ionChange)="selecionarServico($index)"></ion-checkbox>
-        <ion-label class="price-value">R$ {{ tabela.valorServico }}</ion-label>
+        <ion-label class="price-label">{{ tabela.descricaoServico }}</ion-label>
+        <ion-checkbox slot="end" [disabled]="tabela.disabled" (ionChange)="selecionarServico(i)"></ion-checkbox>
+        <ion-label slot="end" class="price-value"><ion-icon style="color: green;" name="cash-outline"></ion-icon> {{ tabela.valorServico | currency }}</ion-label>
       </ion-item>
     </ng-container>
   </ion-list>
 
-  <div class="payment-button" *ngIf="servicoSelecionado">
+  <div class="payment-button">
     <ion-button expand="full" color="primary" (click)="realizarPagamento()" class="button-payment">
       Pagar
     </ion-button>
