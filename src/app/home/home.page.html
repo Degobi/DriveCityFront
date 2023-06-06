@@ -55,13 +55,13 @@
 
         </ion-card>
         
-        <div style="display: grid; justify-content: center; align-items: center;" class="containerPrincipal">
+        <!-- <div style="display: grid; justify-content: center; align-items: center;" class="containerPrincipal">
           <div class="container">
             <div class="chevron"></div>
             <div class="chevron"></div>
             <div class="chevron"></div>
           </div>
-        </div>
+        </div> -->
 
       </ion-col>
 
@@ -74,11 +74,11 @@
       </ion-tab-button>
 
       <ion-tab-button tab="contact">
-        <ion-icon style="color: green;" name="add-circle-outline"></ion-icon>
+        <!-- <ion-icon style="color: green;" name="add-circle-outline"></ion-icon> -->
       </ion-tab-button>
 
-      <ion-tab-button tab="settings">
-        <ion-icon name="settings"></ion-icon>
+      <ion-tab-button tab="settings" (click)="veiculos()">
+        <ion-icon name="car-sport"></ion-icon>
       </ion-tab-button>
 
     </ion-tab-bar>

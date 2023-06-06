@@ -15,7 +15,6 @@ export class JwtInterceptor implements HttpInterceptor {
     const currentUser = this.apiService.currentUserValue;
 
     const tokenExpirationDate: Date = currentUser != null ? this.getTokenExpiration(currentUser.token) : new Date(-1);
-    console.log(`Token expirará em ${tokenExpirationDate}`)
     
     if (tokenExpirationDate && tokenExpirationDate < new Date()) {
       this.router.navigate(['/login']);

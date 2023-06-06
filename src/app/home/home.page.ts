@@ -43,22 +43,23 @@ export class HomePage implements OnInit {
       this.createMap();
       
       if (this.usuario?.veiculo.length == 0)
-        this.exibirModal();
+        this.exibirModal(true);
 
     }).catch((err) => {
-      console.log(err)
+      
     })
 
   }
 
-  async exibirModal() {
+  async exibirModal(boolCadastro) {
     const modal = await this.modalCtrl.create({
       component: VeiculoComponent,
       cssClass: 'meu-modal-classe',
       keyboardClose: false,
       backdropDismiss: false,
       componentProps: {
-        userId: this.usuario.id
+        userId: this.usuario.id,
+        cadastro: boolCadastro
       }
     });
 
@@ -154,6 +155,7 @@ export class HomePage implements OnInit {
 
   async userLocation() {
 
+    console.log("Localização usuario", this.lat, this.lng)
     var user: Marker = {
       coordinate: { lat: this.lat, lng: this.lng },
       iconAnchor: { x: 25, y: 50 },
@@ -217,14 +219,12 @@ export class HomePage implements OnInit {
     this.apiService.getEmpresa().subscribe((data) => {
       this.empresas = [];
       this.empresas = data as Empresa[];
-      console.log('Empresas', this.empresas);
     })
   }
 
   getUsuario(usuario: any) {
     this.apiService.getUsuarioId(usuario.id).subscribe((data: {value: any}) => {
       this.usuario = data.value as User
-      console.log('Usuario', this.usuario)
     })
   }
 
@@ -252,6 +252,10 @@ export class HomePage implements OnInit {
     });
   
     await modal.present();
+  }
+
+  async veiculos() {
+    await this.exibirModal(false);
   }
 
 }

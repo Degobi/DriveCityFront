@@ -4,7 +4,7 @@ import { NavParams } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Empresa } from 'src/interfaces/empresa.interface';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
+import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-tabela-preco-modal',
   templateUrl: './tabela-preco-modal.component.html',
@@ -21,7 +21,8 @@ export class TabelaPrecoModalComponent implements OnInit {
     private toastController: ToastController,
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private inAppBrowser: InAppBrowser
+    private inAppBrowser: InAppBrowser,
+    private apiService: ApiService
   ) {
     this.empresa = this.navParams.get('empresa');
     this.tabelaPrecos = this.empresa.tabelaPrecos;
@@ -31,6 +32,10 @@ export class TabelaPrecoModalComponent implements OnInit {
   ngOnInit() {}
 
   closeModal() {
+    this.tabelaPrecos.forEach((tabela, i) => {
+      tabela.disabled = false;
+    });
+
     this.modalCtrl.dismiss();
   }
 
@@ -48,39 +53,30 @@ export class TabelaPrecoModalComponent implements OnInit {
     }
   }
   
-  
   realizarPagamento() {
 
-    if (this.servicoSelecionado) {
-      const urlCheckout = `https://buy.stripe.com/test_3cs3eF5h6h0XgbC000`;
+    // if (this.servicoSelecionado) {
+    //   const dadosPagamento = {
+    //     valor: this.servicoSelecionado.valorServico,
+    //     descricao: this.servicoSelecionado.descricaoServico,
+    //     // Outros dados necessários para o pagamento, como nome do comprador, email, etc.
+    //   };
+  
+    //   // Chamar a API do PagSeguro para criar uma transação de pagamento e obter o link de pagamento
+    //   this.pagSeguroService.criarTransacao(dadosPagamento).subscribe(
+    //     (resposta) => {
+    //       const linkPagamento = resposta.linkPagamento;
+    //       // Redirecionar o usuário para o link de pagamento
+    //       window.location.href = linkPagamento;
+    //     },
+    //     (erro) => {
+    //       this.presentToast('Erro ao processar pagamento', 'danger');
+    //     }
+    //   );
+    // } else {
+    //   this.presentToast('Nenhum serviço selecionado', 'warning');
+    // }
 
-      // const options = {
-      //   location: 'yes',
-      //   hidden: 'no',
-      //   clearcache: 'yes',
-      //   clearsessioncache: 'yes',
-      //   zoom: 'yes',
-      //   hardwareback: 'yes',
-      //   mediaPlaybackRequiresUserAction: 'no',
-      //   shouldPauseOnSuspend: 'no',
-      //   closebuttoncaption: 'Fechar',
-      //   disallowoverscroll: 'no',
-      //   toolbar: 'yes',
-      //   enableViewportScale: 'no',
-      //   allowInlineMediaPlayback: 'no',
-      //   presentationstyle: 'pagesheet',
-      //   fullscreen: 'yes'
-      // };
-    
-      const browser = this.inAppBrowser.create(urlCheckout, '_blank');
-    
-      browser.on('exit').subscribe(() => {
-        // Lógica a ser executada quando o usuário sair da tela de checkout
-      });
-
-    } else {
-      this.presentToast('Nenhum serviço selecionado', 'warning');
-    }
   }
 
   async presentToast(message: string, style: any) {

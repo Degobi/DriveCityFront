@@ -21,6 +21,7 @@ export class VeiculoComponent implements OnInit {
   tipoVeiculoSelecionado: TipoVeiculo;
   tiposVeiculo: string[];
   userId: number;
+  isCadastro: boolean
 
   constructor(
     private apiService: ApiService,
@@ -31,6 +32,7 @@ export class VeiculoComponent implements OnInit {
     this.placa = "Sua Placa";
     this.tiposVeiculo = Object.values(TipoVeiculo);
     this.userId = this.navParams.get('userId');
+    this.isCadastro = this.navParams.get('cadastro')
 
   }
 
@@ -54,10 +56,8 @@ export class VeiculoComponent implements OnInit {
       next: response => {
         this.modalCtrl.dismiss();
         this.exibirToast('Veículo cadastrado com sucesso', 'success');
-        console.log('Veículo cadastrado com sucesso:', response);
       },
       error: error => {
-        console.error('Erro ao cadastrar o veículo:', error);
       }
     });
 

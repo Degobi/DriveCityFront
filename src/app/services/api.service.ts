@@ -74,6 +74,10 @@ export class ApiService {
     return this.http.post(`${this.url}/veiculo`, modelo);
   }
 
+  gerarLinkPagamento(dados: any) {
+    return this.http.post(`${this.url}/pagamento/link`, dados);
+  }
+
   async exibirToast(mensagem: string, estilo) {
     const toast = await this.toastController.create({
       message: mensagem,
