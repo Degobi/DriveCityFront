@@ -215,11 +215,15 @@ export class HomePage implements OnInit {
 
   }
 
-  async getEmpresas() {
-    this.apiService.getEmpresa().subscribe((data) => {
-      this.empresas = [];
-      this.empresas = data as Empresa[];
-    })
+  getEmpresas() {
+    this.apiService.getEmpresa().subscribe({
+      next: response => {
+        this.empresas = response as Empresa[];
+      },
+      error: error => {
+      }
+      
+    });
   }
 
   getUsuario(usuario: any) {
