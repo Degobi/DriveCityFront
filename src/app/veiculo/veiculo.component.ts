@@ -3,6 +3,8 @@ import { ApiService } from '../services/api.service';
 import { ToastController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Veiculo } from 'src/interfaces/veiculo.interface';
 
 enum TipoVeiculo {
   Moto = 'Moto',
@@ -22,21 +24,36 @@ export class VeiculoComponent implements OnInit {
   tiposVeiculo: string[];
   userId: number;
   isCadastro: boolean
+  veiculos: Array<Veiculo>
+  showOptions: boolean[] = [];
 
   constructor(
     private apiService: ApiService,
     private toastController: ToastController,
     private navParams: NavParams,
-    private modalCtrl: ModalController) 
+    private modalCtrl: ModalController,
+    private router: Router,) 
   {
-    this.placa = "Sua Placa";
+    this.placa        = "Sua Placa";
     this.tiposVeiculo = Object.values(TipoVeiculo);
-    this.userId = this.navParams.get('userId');
-    this.isCadastro = this.navParams.get('cadastro')
+    this.userId       = this.navParams.get('userId');
+    this.isCadastro   = this.navParams.get('cadastro')
 
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.apiService.getVeiculo(this.userId).subscribe({
+      next: response => {
+        this.veiculos = response as Veiculo[];
+      },
+      error: error => {
+      }
+    });
+
+    this.veiculos.forEach(() => {
+      this.showOptions.push(false);
+    });
+  }
 
   async cadastrarVeiculo() {
 
@@ -74,4 +91,23 @@ export class VeiculoComponent implements OnInit {
     toast.present();
   }
 
+  goToBack() : void {
+    this.modalCtrl.dismiss();
+  }
+
+  openOptions(index: number) {
+    // Alterne o estado de exibição das opções para o índice especificado
+    this.showOptions[index] = !this.showOptions[index];
+    
+    // Feche as opções de outras linhas
+    for (let i = 0; i < this.showOptions.length; i++) {
+      if (i !== index) {
+        this.showOptions[i] = false;
+      }
+    }
+  }
+
+  closeOptions() {
+    this.showOptions.fill(false);
+  }
 }

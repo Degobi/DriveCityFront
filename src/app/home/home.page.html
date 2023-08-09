@@ -21,22 +21,17 @@
         <capacitor-google-map id="map" #map></capacitor-google-map>
       </div>
     </ion-content>
-
+<!-- 
     <ion-content>     
-
       <ion-col size="12" size-md="6" size-lg="4" style="flex: 0 0 100%;" *ngFor="let empresa of empresas">
         <ion-card class="cardPrincipal" (click)="destinationOnMap(empresa)">
-
           <img src="{{ empresa.imagem }}" />
-
           <ion-card-header style="display: flex; justify-content: center;">
             <ion-card-title>{{ empresa.nome }}</ion-card-title>
           </ion-card-header>
-
           <ion-card-content style="display: flex; justify-content: center;">
             {{ empresa.descricao }}
           </ion-card-content>
-
           <ion-footer>
             <ion-row>
               <ion-col class="navigation-col">
@@ -53,20 +48,9 @@
               </ion-col>
             </ion-row>
           </ion-footer>
-
         </ion-card>
-        
-        <!-- <div style="display: grid; justify-content: center; align-items: center;" class="containerPrincipal">
-          <div class="container">
-            <div class="chevron"></div>
-            <div class="chevron"></div>
-            <div class="chevron"></div>
-          </div>
-        </div> -->
-
       </ion-col>
-
-    </ion-content>
+    </ion-content> -->
 
     <ion-tab-bar slot="bottom">
 
@@ -74,8 +58,8 @@
         <ion-icon name="reader-outline"></ion-icon>
       </ion-tab-button>
 
-      <ion-tab-button tab="contact">
-        <!-- <ion-icon style="color: green;" name="add-circle-outline"></ion-icon> -->
+      <ion-tab-button tab="contact" (click)="SolicitarServico()">
+        <img src="assets/icon/lava-jato.png">
       </ion-tab-button>
 
       <ion-tab-button tab="settings" (click)="veiculos()">

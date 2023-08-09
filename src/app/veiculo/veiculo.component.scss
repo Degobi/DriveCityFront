@@ -137,3 +137,74 @@
     --background: green;
     --color: white;
   }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .custom-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ion-color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+  
+    ion-icon {
+      margin-right: 0.5rem;
+    }
+  
+    &:hover {
+      background-color: var(--ion-color-primary-shade);
+    }
+  
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
+  .header-row {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .data-row {
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .options-button {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .options-list {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 5px);
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+  }
+  
+  ion-list ion-item {
+    text-align: right;
+  }
+  
+  .table-margin-top {
+    margin-top: 20px; /* Ajuste conforme necessário */
+  }
+  

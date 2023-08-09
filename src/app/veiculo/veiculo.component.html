@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button *ngIf="!isCadastro"></ion-back-button>
-    </ion-buttons>
-    <ion-title style="justify-content: center; align-items: center; display: grid;">{{ isCadastro == true ? 'Cadastrar Veiculo' : 'Veiculos' }}</ion-title>
+    <div class="header-content">
+      <button *ngIf="!isCadastro" class="custom-button" (click)="goToBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+
+      <ion-title style="margin-left: 16%;">
+        {{ isCadastro ? 'Cadastrar Veículo' : 'Veículos' }}
+      </ion-title>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -45,37 +50,51 @@
 </ion-content>
 
 <ion-content class="ion-padding" *ngIf="!isCadastro">
+  <ion-content class="ion-padding">
+    <!-- Formulário de Cadastro de Veículo -->
+    <ion-item>
+      <ion-label>Tipo de Veículo</ion-label>
+      <ion-select [(ngModel)]="tipoVeiculoSelecionado">
+        <ion-select-option value="{{ tipo }}" *ngFor="let tipo of tiposVeiculo">{{ tipo }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="componente">
+      <ion-input [(ngModel)]="placa" placeholder="Placa" maxlength="7"></ion-input>
+    </ion-item>
+    <ion-button expand="block" (click)="cadastrarVeiculo()">Cadastrar</ion-button>
+  
+      <!-- Espaçamento entre o formulário e a tabela -->
+      <ion-divider></ion-divider>
 
-  <ion-item>
-    <ion-label>Tipo de Veículo</ion-label>
-    <ion-select [(ngModel)]="tipoVeiculoSelecionado">
-      <ion-select-option value="{{ tipo }}" *ngFor="let tipo of tiposVeiculo">{{ tipo }}</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item class="componente">
-    <ion-input [(ngModel)]="placa" placeholder="Placa" maxlength="7"></ion-input>
-  </ion-item>
-
-  <div class="principalplaca">
-    <div class="corpo">
-      <div class="placa">
-        <div class="placa_inner">
-          <div class="header">
-            <h3>BRASIL</h3>
-            <img src="https://images.emojiterra.com/twitter/v11/512px/1f1e7-1f1f7.png" alt="">
+    <!-- Tabela de Exibição de Veículos -->
+    <ion-grid class="table-margin-top">
+      <ion-row class="header-row">
+        <ion-col size="3">#</ion-col>
+        <ion-col size="3">Tipo</ion-col>
+        <ion-col size="3">Placa</ion-col>
+        <ion-col size="3"></ion-col>
+      </ion-row>
+  
+      <ion-row *ngFor="let veiculo of veiculos; let i = index" class="data-row">
+        <ion-col size="3">{{ i + 1 }}</ion-col>
+        <ion-col size="3">{{ veiculo.tipo }}</ion-col>
+        <ion-col size="3">{{ veiculo.placa }}</ion-col>
+        <ion-col size="3">
+          <div class="options-button" (click)="openOptions(i)">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
           </div>
-          <div class="placa_body">
-            <div class="qrcode">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/QR_code_for_QRpedia.png" alt="">
-              <p>BR</p>
-            </div>
-            <h1>{{ placa }}</h1>
-            <div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+          <ion-list lines="none" *ngIf="showOptions[i]" class="options-list">
+            <ion-item button (click)="editarVeiculo(veiculo)">
+              <ion-label>Editar</ion-label>
+            </ion-item>
+            <ion-item button (click)="excluirVeiculo(i)">
+              <ion-label>Excluir</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+  
+  
 </ion-content>

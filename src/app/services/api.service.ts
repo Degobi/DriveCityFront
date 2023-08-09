@@ -62,8 +62,8 @@ export class ApiService {
     return this.http.get(`${this.url}/empresa`)
   }
 
-  getVeiculo() {
-    return this.http.get(`${this.url}/veiculo`)
+  getVeiculo(usuarioId: any) {
+    return this.http.get(`${this.url}/veiculo/getall/${usuarioId}`)
   }
 
   getUsuarioId(id: number) {
