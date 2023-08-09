@@ -19,7 +19,7 @@ export class HomePage implements OnInit {
   map: mapboxgl.Map;
   lat: number;
   lng: number;
-  empresas: Array<Empresa>;
+  empresa: Empresa;
   usuario: User;
   distanceInKm: number;
   cost: number;
@@ -70,16 +70,14 @@ export class HomePage implements OnInit {
     });
   
     this.userLocation();
-    this.addEmpresas();
+    this.addEmpresa();
   }
 
-  async addEmpresas() {
-    this.empresas.forEach((e) => {
-      const marker = new mapboxgl.Marker()
-        .setLngLat([Number(e.lng), Number(e.lat)])
-        .setPopup(new mapboxgl.Popup().setHTML(`<h3>${e.nome}</h3><p>${e.descricao}</p>`))
-        .addTo(this.map);
-    });
+  async addEmpresa() {
+    const marker = new mapboxgl.Marker()
+      .setLngLat([Number(this.empresa[0].lng), Number(this.empresa[0].lat)])
+      .setPopup(new mapboxgl.Popup().setHTML(`<h3>${this.empresa[0].nome}</h3><p>${this.empresa[0].descricao}</p>`))
+      .addTo(this.map);
   }
 
   async userLocation() {
@@ -89,7 +87,7 @@ export class HomePage implements OnInit {
       .addTo(this.map);
   }
 
-  destinationOnMap(empresa: any) {
+  solicitarServico() {
     // Crie o mapa
     const map = new mapboxgl.Map({
       accessToken: environment.mapboxToken,
@@ -101,8 +99,8 @@ export class HomePage implements OnInit {
   
     // Adicione a marca de destino
     new mapboxgl.Marker({ color: 'red' })
-      .setLngLat([empresa.lng, empresa.lat])
-      .addTo(map);
+    .setLngLat([Number(this.empresa[0].lng), Number(this.empresa[0].lat)])
+    .addTo(map);
   
     // Adicione a marca de origem
     new mapboxgl.Marker({ color: 'blue' })
@@ -110,13 +108,13 @@ export class HomePage implements OnInit {
       .addTo(map);
   
     // Abra um modal para checkout e pagamento
-    this.openCheckoutModal(empresa);
+    this.openCheckoutModal(this.empresa[0]);
   }
 
   getEmpresas() {
     this.apiService.getEmpresa().subscribe({
       next: response => {
-        this.empresas = response as Empresa[];
+        this.empresa = response as Empresa;
       },
       error: error => {
       }
