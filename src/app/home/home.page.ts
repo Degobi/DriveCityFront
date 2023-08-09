@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, Marker } from '@capacitor/google-maps';
+import * as mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController } from '@ionic/angular';
@@ -8,26 +8,26 @@ import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
 import { User } from 'src/interfaces/user.interface';
 import { TabelaPrecoModalComponent } from '../tabela-preco/tabela-preco-modal.component';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  @ViewChild('map') mapRef: ElementRef;
-  map: any;
+  @ViewChild('map') mapContainer: ElementRef;
+  map: mapboxgl.Map;
   lat: number;
   lng: number;
   empresas: Array<Empresa>;
-  usuario: User
+  usuario: User;
   distanceInKm: number;
   cost: number;
 
   constructor(
     private geolocation: Geolocation,
     private modalCtrl: ModalController,
-    private apiService: ApiService) 
-    {
+    private apiService: ApiService) {
       this.getEmpresas()
       const userSessionStorage = this.apiService.currentUserValue;
       this.getUsuario(userSessionStorage)
@@ -36,22 +36,16 @@ export class HomePage implements OnInit {
   ngOnInit(): void { }
 
   ionViewDidEnter() {
-
     this.geolocation.getCurrentPosition().then((position) => {
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
-      this.createMap();
-      
-      if (this.usuario?.veiculo.length == 0)
-        this.exibirModal(true);
+      this.initializeMap();
 
-    }).catch((err) => {
-      
-    })
-
+      if (this.usuario?.veiculo.length == 0) this.exibirModalVeiculo(true);
+    });
   }
 
-  async exibirModal(boolCadastro) {
+  async exibirModalVeiculo(boolCadastro) {
     const modal = await this.modalCtrl.create({
       component: VeiculoComponent,
       cssClass: 'meu-modal-classe',
@@ -59,160 +53,64 @@ export class HomePage implements OnInit {
       backdropDismiss: false,
       componentProps: {
         userId: this.usuario.id,
-        cadastro: boolCadastro
-      }
+        cadastro: boolCadastro,
+      },
     });
 
     await modal.present();
   }
 
-  async initialMap() {
-    this.map = await GoogleMap.create({
-      id: 'my-map',
-      apiKey: environment.mapsKey,
-      element: this.mapRef.nativeElement,
-      config: {
-        center: {
-          lat: this.lat,
-          lng: this.lng
-        },
-        streetViewControl: false,
-        disableDefaultUI: true,
-        zoom: 12.5,
-      }
-    })
-
-    const marcador: Marker[] = []
-    this.empresas.forEach(e => {
-      marcador.push({
-        coordinate: {
-          lat: Number(e.lat),
-          lng: Number(e.lng)
-        },
-        title: e.nome,
-        snippet: e.descricao,
-      })
+  async initializeMap() {
+    this.map = new mapboxgl.Map({
+      container: this.mapContainer.nativeElement,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [this.lng, this.lat],
+      zoom: 12.5,
+      accessToken: environment.mapboxToken, // Definir o token aqui
     });
-
-    this.userLocation();
-    await this.map.addMarkers(marcador)
-  }
-
-  async createMap() {
-    this.map = await GoogleMap.create({
-      id: 'my-map',
-      apiKey: environment.mapsKey,
-      element: this.mapRef.nativeElement,
-      config: {
-        center: {
-          lat: this.lat,
-          lng: this.lng
-        },
-        streetViewControl: false,
-        disableDefaultUI: true,
-        zoom: 12.5
-      }
-    })
-
+  
     this.userLocation();
     this.addEmpresas();
   }
 
   async addEmpresas() {
-    const marcador: Marker[] = [];
-    const directionsService = new google.maps.DirectionsService();
-
-    this.empresas.forEach(e => {
-
-      let directionsRequest = { 
-        origin: {lat: this.lat, lng: this.lng }, 
-        destination: {lat: Number(e.lat), lng: Number(e.lng) }, 
-        travelMode: google.maps.TravelMode.DRIVING
-      }
-
-      directionsService.route(directionsRequest, (res, stat) => {
-        e.res = res
-        let distanceInMeters = res.routes[0].legs[0].distance.value;
-        e.distancia = Math.round(distanceInMeters / 1000);
-      })
-
-      marcador.push({
-        coordinate: {
-          lat: Number(e.lat),
-          lng: Number(e.lng)
-        },
-        title: e.nome,
-        snippet: e.descricao,
-        iconAnchor: { x: 25, y: 50 },
-        iconSize: { width: 50, height: 50 },
-        iconOrigin: { x: 0, y: 0 },
-        iconUrl: '../assets/icon/car.png'
-      })
+    this.empresas.forEach((e) => {
+      const marker = new mapboxgl.Marker()
+        .setLngLat([Number(e.lng), Number(e.lat)])
+        .setPopup(new mapboxgl.Popup().setHTML(`<h3>${e.nome}</h3><p>${e.descricao}</p>`))
+        .addTo(this.map);
     });
-
-    await this.map.addMarkers(marcador)
   }
 
   async userLocation() {
-
-    console.log("Localização usuario", this.lat, this.lng)
-    var user: Marker = {
-      coordinate: { lat: this.lat, lng: this.lng },
-      iconAnchor: { x: 25, y: 50 },
-      iconSize: { width: 50, height: 50 },
-      iconOrigin: { x: 0, y: 0 },
-      iconUrl: '../assets/icon/navigation.png',
-      title: 'Sua Localização',
-    }
-
-    await this.map.addMarker(user)
+    const userMarker = new mapboxgl.Marker()
+      .setLngLat([this.lng, this.lat])
+      .setPopup(new mapboxgl.Popup().setHTML('<h3>Sua Localização</h3>'))
+      .addTo(this.map);
   }
 
   destinationOnMap(empresa: any) {
-    const directionsDisplay = new google.maps.DirectionsRenderer({
-      suppressMarkers: true  // Suprime os marcadores padrão
-    });
-
-    this.map = new google.maps.Map(document.getElementById("map"), {
-      center: {
-        lat: this.lat,
-        lng: this.lng
-      },
+    // Crie o mapa
+    const map = new mapboxgl.Map({
+      accessToken: environment.mapboxToken,
+      container: document.getElementById('map'),
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [this.lng, this.lat],
       zoom: 10,
-      streetViewControl: false,
-      disableDefaultUI: true,
     });
-
-    directionsDisplay.setMap(this.map);
-    directionsDisplay.setDirections(empresa.res);
-
-    // Personalize o marcador do "Ponto A"
-    const startPointMarker = new google.maps.Marker({
-      position: directionsDisplay.getDirections().routes[0].legs[0].start_location,
-      icon: {
-        url: "../assets/icon/navigation.png",
-        scaledSize: new google.maps.Size(50, 50),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(25, 50)
-      },
-      map: this.map
-    });
-
-    // Personalize o marcador do "Ponto B"
-    const endPointMarker = new google.maps.Marker({
-      position: directionsDisplay.getDirections().routes[0].legs[0].end_location,
-      icon: {
-        url: "../assets/icon/car.png",
-        scaledSize: new google.maps.Size(50, 50),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(25, 50)
-      },
-      map: this.map
-    });
-
-    //Modal para checkout e pagamento
+  
+    // Adicione a marca de destino
+    new mapboxgl.Marker({ color: 'red' })
+      .setLngLat([empresa.lng, empresa.lat])
+      .addTo(map);
+  
+    // Adicione a marca de origem
+    new mapboxgl.Marker({ color: 'blue' })
+      .setLngLat([this.lng, this.lat])
+      .addTo(map);
+  
+    // Abra um modal para checkout e pagamento
     this.openCheckoutModal(empresa);
-
   }
 
   getEmpresas() {
@@ -251,7 +149,7 @@ export class HomePage implements OnInit {
     });
 
     modal.onDidDismiss().then((result) => {
-      this.createMap()
+      this.initializeMap()
       console.log("RESPOSTA MODAL",result)
     });
   
@@ -259,7 +157,7 @@ export class HomePage implements OnInit {
   }
 
   async veiculos() {
-    await this.exibirModal(false);
+    await this.exibirModalVeiculo(false);
   }
 
 }
