@@ -2,7 +2,8 @@ export interface Veiculo {
     id: number,
     tipo: string,
     placa: string,
-    intUsuarioId: number
+    intUsuarioId: number,
+    disabled?: boolean
 }
 
 export enum Cor {

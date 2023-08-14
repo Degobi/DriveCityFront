@@ -1,3 +1,5 @@
+import { TabelaPreco } from "./tabelaPreco";
+
 export interface Empresa {
     id: number,
     nome: string,
@@ -7,5 +9,5 @@ export interface Empresa {
     distancia: number,
     tempo: number,
     res: any,
-    tabelaPrecos: Array<any>
+    tabelaPrecos: Array<TabelaPreco>
 }

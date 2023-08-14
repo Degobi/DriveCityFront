@@ -5,7 +5,7 @@
         <ion-icon name="close" class="close-icon"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="header-title">Tabela de Preços</ion-title>
+    <ion-title style="text-align: center;" class="header-title">Tabela de Preços</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,15 +15,15 @@
     <ng-container *ngFor="let tabela of tabelaPrecos; let i = index">
       <ion-item lines="none" class="price-item">
         <ion-label class="price-label">{{ tabela.descricaoServico }}</ion-label>
+        <ion-label slot="end" class="price-value"><ion-icon style="color: green;" name="cash-outline"></ion-icon> R{{ tabela.valorServico | currency }}</ion-label>
         <ion-checkbox slot="end" [disabled]="tabela.disabled" (ionChange)="selecionarServico(i)"></ion-checkbox>
-        <ion-label slot="end" class="price-value"><ion-icon style="color: green;" name="cash-outline"></ion-icon> {{ tabela.valorServico | currency }}</ion-label>
       </ion-item>
     </ng-container>
   </ion-list>
 
   <div class="payment-button">
-    <ion-button expand="full" color="primary" (click)="realizarPagamento()" class="button-payment">
-      Pagar
+    <ion-button expand="full" color="primary" (click)="escolherVeiculo()" class="button-payment">
+      Seguinte
     </ion-button>
   </div>
 </ion-content>

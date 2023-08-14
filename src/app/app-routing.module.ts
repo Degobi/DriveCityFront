@@ -30,6 +30,11 @@ const routes: Routes = [
     path: 'tabela-preco',
     loadChildren: () => import('./tabela-preco/tabela-preco-modal.component.module').then(m => m.TabelaPrecoModalComponentModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'veiculo-escolha',
+    loadChildren: () => import('./veiculo-escolha/veiculo-escolha-modal.component.module').then(m => m.VeiculoEscolhaModalComponentModule),
+    canActivate: [AuthGuard]
   }
 
 ];

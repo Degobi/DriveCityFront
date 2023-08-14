@@ -68,9 +68,11 @@ export class HomePage implements OnInit {
       zoom: 12.5,
       accessToken: environment.mapboxToken, // Definir o token aqui
     });
-  
-    this.userLocation();
-    this.addEmpresa();
+    
+    this.map.on('load', () => {
+      this.addEmpresa();
+      this.userLocation();
+    });
   }
 
   async addEmpresa() {
@@ -135,17 +137,17 @@ export class HomePage implements OnInit {
   async openCheckoutModal(empresa: any) {
     const modal = await this.modalCtrl.create({
       component: TabelaPrecoModalComponent,
-      cssClass: 'custom-modal',
       keyboardClose: false,
       componentProps: {
-        empresa: empresa
+        empresa: empresa,
+        veiculos: this.usuario?.veiculo
       },
-      breakpoints: [0, 0.6],
-      initialBreakpoint: 0.6,
+      breakpoints: [0, 0.4],
+      initialBreakpoint: 0.5,
       backdropDismiss: false,
-      showBackdrop: false
+      showBackdrop: true
     });
-
+    
     modal.onDidDismiss().then((result) => {
       this.initializeMap()
       console.log("RESPOSTA MODAL",result)

@@ -5,6 +5,9 @@ import { ToastController } from '@ionic/angular';
 import { Empresa } from 'src/interfaces/empresa.interface';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ApiService } from '../services/api.service';
+import { VeiculoEscolhaModalComponent } from '../veiculo-escolha/veiculo-escolha-modal.component';
+import { TabelaPreco } from 'src/interfaces/tabelaPreco';
+
 @Component({
   selector: 'app-tabela-preco-modal',
   templateUrl: './tabela-preco-modal.component.html',
@@ -13,9 +16,10 @@ import { ApiService } from '../services/api.service';
 
 export class TabelaPrecoModalComponent implements OnInit {
   empresa: Empresa;
-  tabelaPrecos: Array<any>;
-  servicoSelecionado: any;
+  tabelaPrecos: Array<TabelaPreco>;
+  valorServicoSelecionado: any;
   disabledCheckbox: boolean;
+  veiculos: Array<any>
 
   constructor(
     private toastController: ToastController,
@@ -24,12 +28,18 @@ export class TabelaPrecoModalComponent implements OnInit {
     private inAppBrowser: InAppBrowser,
     private apiService: ApiService
   ) {
-    this.empresa = this.navParams.get('empresa');
-    this.tabelaPrecos = this.empresa.tabelaPrecos;
-    this.disabledCheckbox = false;
+    this.empresa            = this.navParams.get('empresa');
+    this.veiculos           = this.navParams.get('veiculos');
+    this.tabelaPrecos       = this.empresa.tabelaPrecos;
+    this.disabledCheckbox   = false;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.tabelaPrecos.forEach((tabela, i) => {
+      tabela.disabled = false;
+    });
+
+  }
 
   closeModal() {
     this.tabelaPrecos.forEach((tabela, i) => {
@@ -40,13 +50,13 @@ export class TabelaPrecoModalComponent implements OnInit {
   }
 
   selecionarServico(indice: number) {
-    if (this.servicoSelecionado === this.tabelaPrecos[indice]) {
-      this.servicoSelecionado = null;
+    if (this.valorServicoSelecionado === this.tabelaPrecos[indice]) {
+      this.valorServicoSelecionado = null;
       this.tabelaPrecos.forEach((tabela) => {
         tabela.disabled = false;
       });
     } else {
-      this.servicoSelecionado = this.tabelaPrecos[indice];
+      this.valorServicoSelecionado = this.tabelaPrecos[indice];
       this.tabelaPrecos.forEach((tabela, i) => {
         tabela.disabled = i !== indice;
       });
@@ -55,10 +65,10 @@ export class TabelaPrecoModalComponent implements OnInit {
   
   realizarPagamento() {
 
-    // if (this.servicoSelecionado) {
+    // if (this.valorServicoSelecionado) {
     //   const dadosPagamento = {
-    //     valor: this.servicoSelecionado.valorServico,
-    //     descricao: this.servicoSelecionado.descricaoServico,
+    //     valor: this.valorServicoSelecionado.valorServico,
+    //     descricao: this.valorServicoSelecionado.descricaoServico,
     //     // Outros dados necessários para o pagamento, como nome do comprador, email, etc.
     //   };
   
@@ -87,5 +97,36 @@ export class TabelaPrecoModalComponent implements OnInit {
       color: style
     });
     toast.present();
+  }
+
+  async escolherVeiculo() {
+
+    if (this.valorServicoSelecionado) {
+
+      const modal = await this.modalCtrl.create({
+        component: VeiculoEscolhaModalComponent,
+        keyboardClose: false,
+        componentProps: {
+          veiculos: this.veiculos,
+          valorServico: this.valorServicoSelecionado
+        },
+
+        breakpoints: [0, 0.4],
+        initialBreakpoint: 0.5,
+        backdropDismiss: false,
+        showBackdrop: true
+      });
+      
+      modal.onDidDismiss().then((result) => {
+        this.modalCtrl.dismiss();
+        console.log("RESPOSTA MODAL",result)
+      });
+
+      await modal.present();
+
+    } else {
+      this.presentToast('Selecione ao menos um valor para prosseguir!', 'warning');
+    }
+
   }
 }

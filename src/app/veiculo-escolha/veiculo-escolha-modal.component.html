@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()" class="close-button">
+        <ion-icon name="close" class="close-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center;" class="header-title">Escolha Veículo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="content">
+  <ion-list class="price-list">
+    <ng-container *ngFor="let veiculo of veiculos; let i = index">
+      <ion-item lines="none" class="price-item">
+        <ion-label class="price-label">{{ veiculo.tipo }}</ion-label>
+        <ion-label class="price-label">{{ veiculo.placa }}</ion-label>
+        <ion-checkbox slot="end" [disabled]="veiculo.disabled" (ionChange)="selecionarVeiculo(i)"></ion-checkbox>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <div class="payment-button">
+    <ion-button expand="full" color="primary" (click)="pagar()" class="button-payment">
+      Pagar
+    </ion-button>
+  </div>
+</ion-content>
