@@ -1,0 +1,45 @@
+ion-content {
+  --ion-background-color: #f7f7f7;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f0f2f5;
+  height: 100vh;
+
+  .timeline-step {
+    display: flex;
+    align-items: center;
+    margin: 10px 0; /* Espaçamento menor entre os elementos */
+    position: relative;
+
+    .step-icon {
+      font-size: 32px; /* Ícones ligeiramente menores */
+      color: var(--ion-color-primary);
+    }
+
+    .step-label {
+      font-weight: bold;
+      color: var(--ion-color-dark);
+      font-size: 12px; /* Nomes menores */
+      font-family: 'Segoe UI', sans-serif; /* Exemplo de outra fonte */
+      margin-left: 10px; /* Espaçamento entre ícone e nome */
+    }
+
+    &.in-progress {
+      .step-icon {
+        color: var(--ion-color-success);
+      }
+    }
+  }
+
+  .timeline-line {
+    width: 4px; /* Espessura da linha */
+    background: var(--ion-color-medium);
+    flex-grow: 1;
+    max-height: 150px; /* Altura máxima reduzida */
+  }
+}

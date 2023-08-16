@@ -27,6 +27,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'historico',
+    loadChildren: () => import('./historico/historico.component.module').then(m => m.HistoricoComponentModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'tabela-preco',
     loadChildren: () => import('./tabela-preco/tabela-preco-modal.component.module').then(m => m.TabelaPrecoModalComponentModule),
     canActivate: [AuthGuard]

@@ -8,6 +8,7 @@ import { Empresa } from 'src/interfaces/empresa.interface';
 import { VeiculoComponent } from '../veiculo/veiculo.component';
 import { User } from 'src/interfaces/user.interface';
 import { TabelaPrecoModalComponent } from '../tabela-preco/tabela-preco-modal.component';
+import { HistoricoComponent } from '../historico/historico.component';
 
 @Component({
   selector: 'app-home',
@@ -158,6 +159,20 @@ export class HomePage implements OnInit {
 
   async veiculos() {
     await this.exibirModalVeiculo(false);
+  }
+
+  async historico() {
+
+    const modal = await this.modalCtrl.create({
+      component: HistoricoComponent,
+      cssClass: 'meu-modal-classe',
+      keyboardClose: false,
+      backdropDismiss: false,
+      componentProps: {
+      },
+    });
+
+    await modal.present();
   }
 
 }

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+      <button  class="custom-button" (click)="goToBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+
+      <ion-title style="margin-left: 16%;">Histórico
+      </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="timeline">
+    <div class="timeline-step completed">
+      <div class="step-icon">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </div>
+      <div class="step-label">
+        Pagamento Autorizado
+      </div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-step">
+      <div class="step-icon">
+        <ion-icon name="hourglass-outline"></ion-icon>
+      </div>
+      <div class="step-label">
+        Aguardando Van
+      </div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-step in-progress">
+      <div class="step-icon">
+        <ion-spinner></ion-spinner>
+      </div>
+      <div class="step-label">
+        Serviço em Andamento
+      </div>
+    </div>
+    <div class="timeline-line"></div>
+    <div class="timeline-step">
+      <div class="step-icon">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </div>
+      <div class="step-label">
+        Serviço Realizado
+      </div>
+    </div>
+  </div>
+</ion-content>
