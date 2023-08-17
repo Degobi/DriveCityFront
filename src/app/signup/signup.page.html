@@ -17,19 +17,32 @@
   <form id="form" [formGroup]="register">
 
     <ion-item style="margin-top: 15px;">
-      <ion-input formControlName="Nome" placeholder="Nome" required="true"></ion-input>
+      <ion-input formControlName="Nome" placeholder="Nome" required="true" style="text-align: center;"></ion-input>
+    </ion-item>
+    
+    <ion-item style="margin-top: 15px;">
+      <ion-input
+        style="text-align: center;"
+        formControlName="Telefone"
+        type="tel"
+        placeholder="(DDD) Telefone"
+        required
+        maxlength="15"
+        inputmode="tel"
+        (ionChange)="formatarTelefone($event)"
+      ></ion-input>
     </ion-item>
 
     <ion-item style="margin-top: 15px;">
-      <ion-input formControlName="Email" placeholder="Email" required></ion-input>
+      <ion-input formControlName="Email" placeholder="Email" required style="text-align: center;"></ion-input>
     </ion-item>
 
     <ion-item style="margin-top: 15px;">
-      <ion-input formControlName="Senha" type="password" placeholder="Senha" required></ion-input>
+      <ion-input formControlName="Senha" type="password" placeholder="Senha" required style="text-align: center;"></ion-input>
     </ion-item>
-
+    
     <ion-button (click)="RegisterAccount(register)" expand="block" shape="round">Registrar</ion-button>
   </form>
 
-  <p>Ao pressionar 'Registrar' você concordará com <br/> nossos termos & condições. </p>
+  <p>Ao pressionar 'Registrar' você concordará com <br/> nossos <a href="#">termos & condições</a>.</p>
 </ion-content>

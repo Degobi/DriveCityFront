@@ -38,7 +38,7 @@ export class ApiService {
     .pipe(map((response: { value }) => {
 
       if (response && response.value.token) {
-        const user = {id: response.value.id, token: response.value.token, email: response.value.email, nome: response.value.nome};
+        const user = {id: response.value.id, token: response.value.token, email: response.value.email, nome: response.value.nome, telefone: response.value.telefone};
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         return user;

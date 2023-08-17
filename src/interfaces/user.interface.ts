@@ -3,5 +3,6 @@ export interface User {
     email: string;
     token: string;
     nome: string;
+    telefone: string;
     veiculo?: Array<any>;
 }

@@ -27,7 +27,8 @@ export class SignupPage implements OnInit {
       this.register = this.formBuilder.group({
         Nome: new FormControl('', Validators.minLength(1)),
         Email: new FormControl('', Validators.required),
-        Senha: new FormControl('', Validators.required)
+        Senha: new FormControl('', Validators.required),
+        Telefone: new FormControl('', Validators.required)
       })
     }
 
@@ -36,6 +37,18 @@ export class SignupPage implements OnInit {
 
   goToBack() : void {
     this.router.navigate(['/login']);
+  }
+
+  formatarTelefone(event) {
+    let telefone = event.detail.value.replace(/[^0-9]/g, ''); // Remover caracteres não numéricos
+    if (telefone.length >= 2) {
+      telefone = `(${telefone.slice(0, 2)}) ${telefone.slice(2)}`;
+    }
+    if (telefone.length >= 10) {
+      telefone = `${telefone.slice(0, 9)}-${telefone.slice(9)}`;
+    }
+  
+    this.register.get('Telefone').setValue(telefone);
   }
 
   async RegisterAccount() {
@@ -64,6 +77,13 @@ export class SignupPage implements OnInit {
     if (!this.register.value.Senha.trim().length) {
       await loading.dismiss();
       await this.apiService.exibirToast('Informe a Senha', 'warning');
+
+      return;
+    }
+
+    if (!this.register.value.Telefone.trim().length) {
+      await loading.dismiss();
+      await this.apiService.exibirToast('Informe o Telefone', 'warning');
 
       return;
     }
