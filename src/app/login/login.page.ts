@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 
 export class LoginPage implements OnInit {
   public login: FormGroup;
+  public lembrarCredenciaisForm: FormGroup;
 
   constructor(
     private platform: Platform,
@@ -26,6 +27,18 @@ export class LoginPage implements OnInit {
         Email: new FormControl('', Validators.required),
         Senha: new FormControl('', Validators.required)
       })
+
+      this.lembrarCredenciaisForm = this.formBuilder.group({
+        LembrarCredenciais: new FormControl(true)
+      });
+
+      const lembrarEmail = localStorage.getItem('lembrarEmail');
+      if (lembrarEmail) {
+        this.login.patchValue({ Email: lembrarEmail });
+        this.lembrarCredenciaisForm.value.LembrarCredenciais = true;
+      } else {
+        this.lembrarCredenciaisForm.value.LembrarCredenciais = false; 
+      }
   }
 
   ngOnInit() {}
@@ -37,6 +50,7 @@ export class LoginPage implements OnInit {
   }
 
   async SendLogin() {
+    const lembrarCredenciais = this.lembrarCredenciaisForm.value.LembrarCredenciais; 
     const loading = await this.loadingController.create();
     await loading.present();
 
@@ -50,6 +64,12 @@ export class LoginPage implements OnInit {
       await loading.dismiss();
       await this.apiService.exibirToast('Informe o Email', 'warning');
       return;
+    }
+
+    if (lembrarCredenciais) {
+      localStorage.setItem('lembrarEmail', this.login.value.Email);
+    } else {
+      localStorage.removeItem('lembrarEmail');
     }
 
     this.apiService.login(this.login.value).subscribe(
