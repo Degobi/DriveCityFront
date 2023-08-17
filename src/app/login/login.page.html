@@ -17,7 +17,7 @@
 
   <form [formGroup]="login">
     <div 
-    style="margin-top: -210px;
+    style="margin-top: -230px;
     padding-left: 30px;
     padding-right: 30px;">
 
@@ -29,8 +29,14 @@
       </ion-item>
 
     </div>
+    <form [formGroup]="lembrarCredenciaisForm">
+      <div style="display: flex; align-items: center; margin-top: 2%; margin-left: 10%;">
+        <ion-checkbox formControlName="LembrarCredenciais" color="success"></ion-checkbox>
+        <div style="margin-left: 10px;">Lembrar Credenciais</div>
+      </div>
+    </form>
     <div 
-    style="margin-top: 15%;
+    style="margin-top: -2%;
     padding-left: 30px;
     padding-right: 30px;">
       <ion-button (click)="SendLogin(login)" expand="block" shape="round">Login</ion-button>
