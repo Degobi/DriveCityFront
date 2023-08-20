@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
+import * as turf from '@turf/turf';
 import { environment } from 'src/environments/environment';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController } from '@ionic/angular';
@@ -29,9 +30,17 @@ export class HomePage implements OnInit {
     private geolocation: Geolocation,
     private modalCtrl: ModalController,
     private apiService: ApiService) {
+      
       this.getEmpresas()
+      setInterval(() => {
+        this.getEmpresas();
+      }, 60000); 
+
       const userSessionStorage = this.apiService.currentUserValue;
-      this.getUsuario(userSessionStorage)
+      this.apiService.getUsuarioId(userSessionStorage.id).subscribe((data: {value: any}) => {
+        this.usuario = data.value as User
+      })
+
     }
 
   ngOnInit(): void { }
@@ -91,24 +100,15 @@ export class HomePage implements OnInit {
   }
 
   solicitarServico() {
-    // Crie o mapa
-    const map = new mapboxgl.Map({
-      accessToken: environment.mapboxToken,
-      container: document.getElementById('map'),
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.lng, this.lat],
-      zoom: 10,
-    });
-  
     // Adicione a marca de destino
     new mapboxgl.Marker({ color: 'red' })
     .setLngLat([Number(this.empresa[0].lng), Number(this.empresa[0].lat)])
-    .addTo(map);
+    .addTo(this.map);
   
     // Adicione a marca de origem
     new mapboxgl.Marker({ color: 'blue' })
       .setLngLat([this.lng, this.lat])
-      .addTo(map);
+      .addTo(this.map);
   
     // Abra um modal para checkout e pagamento
     this.openCheckoutModal(this.empresa[0]);
@@ -123,12 +123,6 @@ export class HomePage implements OnInit {
       }
       
     });
-  }
-
-  getUsuario(usuario: any) {
-    this.apiService.getUsuarioId(usuario.id).subscribe((data: {value: any}) => {
-      this.usuario = data.value as User
-    })
   }
 
   logout() {

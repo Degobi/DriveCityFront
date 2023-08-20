@@ -34,6 +34,7 @@
     "@ionic/angular": "^7.0.8",
     "@ionic/angular-server": "^7.0.8",
     "@ionic/storage": "^3.0.6",
+    "@turf/turf": "^6.5.0",
     "ionicons": "^6.0.3",
     "jwt-decode": "^3.1.2",
     "mapbox-gl": "^2.15.0",
