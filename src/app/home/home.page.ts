@@ -30,16 +30,12 @@ export class HomePage implements OnInit {
     private geolocation: Geolocation,
     private modalCtrl: ModalController,
     private apiService: ApiService) {
-      
+
+      this.getUsuario()
       this.getEmpresas()
       setInterval(() => {
         this.getEmpresas();
       }, 60000); 
-
-      const userSessionStorage = this.apiService.currentUserValue;
-      this.apiService.getUsuarioId(userSessionStorage.id).subscribe((data: {value: any}) => {
-        this.usuario = data.value as User
-      })
 
     }
 
@@ -169,4 +165,9 @@ export class HomePage implements OnInit {
     await modal.present();
   }
 
+  getUsuario() {
+    this.apiService.getUsuarioId(this.apiService.currentUserValue.id).subscribe((data: {value: any}) => {
+      this.usuario = data.value as User
+    })
+  }
 }
