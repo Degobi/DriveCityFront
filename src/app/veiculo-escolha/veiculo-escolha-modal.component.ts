@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
@@ -16,17 +16,32 @@ export class VeiculoEscolhaModalComponent implements OnInit {
   veiculos: Array<Veiculo>;
   veiculoSelecionado: any;
   disabledCheckbox: boolean;
-  valorServico: number;
-
+  servico: any;
+  idPreference: any;
+  
   constructor(
     private toastController: ToastController,
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private inAppBrowser: InAppBrowser,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private renderer: Renderer2
   ) {
     this.veiculos     = this.navParams.get('veiculos');
-    this.valorServico = this.navParams.get('valorServico');
+    this.servico      = this.navParams.get('valorServico');
+
+    let dados = {
+      UnitPrice: this.servico.valorServico,
+      Title: this.servico.descricaoServico
+    }
+
+    this.apiService.gerarLinkPagamento(dados).subscribe({
+      next: (response: any) => {
+        this.idPreference = response.value;
+      },
+      error: error => {
+      }
+    });
   }
 
   ngOnInit() {
@@ -63,45 +78,24 @@ export class VeiculoEscolhaModalComponent implements OnInit {
     toast.present();
   }
 
-  async pagar() {
+  pagar() {
 
     if (this.veiculoSelecionado) {
-
-      const valorDoServico = this.valorServico;
-      const descricaoDoServico = 'Descrição do Serviço';
-      const publicKeyDoMercadoPago = 'TEST-c5185e79-b72c-4c77-9a79-7a53d7715583';
-      
-      const urlDePagamento = `http://mpago.la/2na2mxr`;
-      
+      const urlDePagamento = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${this.idPreference}`;
       const browser = this.inAppBrowser.create(urlDePagamento, '_blank');
-      
+
       browser.on('loadstop').subscribe(event => {
         if (event.url.includes('URL_DE_RETORNO_DO_PAGAMENTO')) {
           this.modalCtrl.dismiss();
           browser.close();
         }
       });
+      
       this.modalCtrl.dismiss();
 
     } else {
       this.presentToast('Selecione ao menos um veículo para prosseguir!', 'warning');
     }
-
-  }
-
-  criarPreferenciaDePagamento(valor: number, descricao: string) {
-
-    const preferencia = {
-      items: [
-        {
-          title: descricao,
-          quantity: 1,
-          unit_price: valor,
-        },
-      ],
-    };
-
-    return 'ID_DA_PREFERENCIA';
   }
 
 }

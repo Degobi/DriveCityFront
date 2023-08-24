@@ -75,7 +75,7 @@ export class ApiService {
   }
 
   gerarLinkPagamento(dados: any) {
-    return this.http.post(`${this.url}/pagamento/link`, dados);
+    return this.http.post(`${this.url}/checkout/mercadopago-pagar`, dados);
   }
 
   async exibirToast(mensagem: string, estilo) {
